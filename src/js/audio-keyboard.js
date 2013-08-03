@@ -64,10 +64,34 @@
 
     function dispatchKeyDown( keyboard, index ) {
         console.log('down', keyboard);
+
+        keyboard.keyPressed = true;
+
+        var key = keyboard.keys[index],
+            currentClass = key.className;
+
+        key.classList.add('active');
+
+        /*scope.dispatchEvent({
+            type: 'keydown',
+            index: index
+        });*/
     }
 
     function dispatchKeyUp( keyboard ) {
         console.log('up', keyboard);
+
+        var activeKey = keyboard.querySelector( '.active' );
+
+        if( activeKey ) {
+            activeKey.classList.remove('active');
+        }
+
+        keyboard.keyPressed = false;
+
+        /*scope.dispatchEvent({
+            type: 'keyup'
+        });*/
     }
 
     xtag.register('audio-keyboard', {
