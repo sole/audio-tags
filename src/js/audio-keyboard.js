@@ -1,5 +1,7 @@
 (function () {
 
+    'use strict';
+
     function initLayout(kb) {
         
         var numBlacks = kb.blacks.length;
@@ -20,12 +22,52 @@
                 keyDiv.innerHTML = label;
                 keyDiv.dataset.index = index;
 
+                keyDiv.addEventListener('mousedown', makeCallback(kb, onDivMouseDown), false);
+                keyDiv.addEventListener('mouseup', makeCallback(kb, onDivMouseUp), false);
+
                 kb.keys.push( keyDiv );
 
                 kb.appendChild( keyDiv );
 
             }
         }
+    }
+
+    function makeCallback(kb, fn) {
+        var cb = function(e) {
+            fn(kb, e);
+        };
+
+        return cb;
+
+    }
+
+    function onDivMouseDown( keyboard, ev ) {
+
+        if( keyboard.keyPressed ) {
+            return;
+        }
+
+        var key = ev.target;
+
+        dispatchKeyDown( keyboard, key.dataset.index );
+
+    }
+
+    function onDivMouseUp( keyboard, ev ) {
+
+        if( keyboard.keyPressed ) {
+            dispatchKeyUp( keyboard );
+        }
+
+    }
+
+    function dispatchKeyDown( keyboard, index ) {
+        console.log('down', keyboard);
+    }
+
+    function dispatchKeyUp( keyboard ) {
+        console.log('up', keyboard);
     }
 
     xtag.register('audio-keyboard', {
