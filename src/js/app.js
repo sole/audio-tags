@@ -3,14 +3,10 @@ document.addEventListener('DOMComponentsLoaded', function() {
     var oscillator = document.querySelector('audio-oscillator');
     var keyboard = document.querySelector('audio-keyboard');
     
-    console.log(oscillator, keyboard);
-
-    console.log(MIDIUtils.noteToFrequency(4, 0));
-
     keyboard.addEventListener('keydown', function(e) {
-        console.log('keydown event', e, e.detail.index);
-        var index = e.detail.index;
-        var freq = MIDIUtils.noteToFrequency(index + 4, 4);
+        console.log('keydown event', e.detail.index);
+        var index = e.detail.index | 0; // index comes as a string, cast it back into an integer
+        var freq = MIDIUtils.noteToFrequency(index + 40); // 40 -> transpose to +C4
         oscillator.noteOn(freq);
     }, false);
 
