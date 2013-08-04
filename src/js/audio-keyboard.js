@@ -32,6 +32,10 @@
             }
         }
 
+        kb.tabIndex = 1; // TODO what if there's more than one kb
+        kb.addEventListener('keydown', makeCallback(kb, onKeyDown), false);
+        kb.addEventListener('keyup', makeCallback(kb, onKeyUp), false);
+
     }
 
 
@@ -54,7 +58,7 @@
 
         var key = ev.target;
 
-        dispatchKeyDown( keyboard, key.dataset.index );
+        dispatchNoteOn( keyboard, key.dataset.index );
 
     }
 
@@ -62,13 +66,53 @@
     function onDivMouseUp( keyboard, ev ) {
 
         if( keyboard.keyPressed ) {
-            dispatchKeyUp( keyboard );
+            dispatchNoteOff( keyboard );
         }
 
     }
 
 
-    function dispatchKeyDown( keyboard, index ) {
+    function onKeyDown( keyboard, e ) {
+
+        console.log('REAL keydown');
+        var index = findKeyIndex( keyboard, e );
+
+        if( keyboard.keyPressed ) {
+            return;
+        }
+
+        if( index === -1 || e.altKey || e.altGraphKey || e.ctrlKey || e.metaKey || e.shiftKey ) {
+            // no further processing
+            return;
+        }
+
+        dispatchNoteOn( keyboard, index );
+
+    }
+
+
+    function onKeyUp( keyboard, e ) {
+
+        // Only fire key up if the key is in the defined layout
+        if( findKeyIndex( keyboard, e ) !== -1 ) {
+            dispatchNoteOff( keyboard );
+        }
+
+    }
+
+
+    function findKeyIndex( keyboard, e ) {
+
+        var keyCode = e.keyCode || e.which,
+            keyChar = String.fromCharCode( keyCode ),
+            index = keyboard.keyboardLayout.indexOf( keyChar );
+
+        return index;
+
+    }
+
+
+    function dispatchNoteOn( keyboard, index ) {
         console.log('down', keyboard);
 
         keyboard.keyPressed = true;
@@ -85,7 +129,7 @@
     }
 
 
-    function dispatchKeyUp( keyboard ) {
+    function dispatchNoteOff( keyboard ) {
         console.log('up', keyboard);
 
         var activeKey = keyboard.querySelector( '.active' );
@@ -101,6 +145,8 @@
         keyboard.dispatchEvent(evt);
         
     }
+
+
 
 
     xtag.register('audio-keyboard', {
