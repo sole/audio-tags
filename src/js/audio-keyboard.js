@@ -31,9 +31,12 @@
 
             }
         }
+
     }
 
+
     function makeCallback(kb, fn) {
+
         var cb = function(e) {
             fn(kb, e);
         };
@@ -41,6 +44,7 @@
         return cb;
 
     }
+
 
     function onDivMouseDown( keyboard, ev ) {
 
@@ -54,6 +58,7 @@
 
     }
 
+
     function onDivMouseUp( keyboard, ev ) {
 
         if( keyboard.keyPressed ) {
@@ -61,6 +66,7 @@
         }
 
     }
+
 
     function dispatchKeyDown( keyboard, index ) {
         console.log('down', keyboard);
@@ -72,11 +78,12 @@
 
         key.classList.add('active');
 
-        /*scope.dispatchEvent({
-            type: 'keydown',
-            index: index
-        });*/
+        var evt = document.createEvent('CustomEvent');
+        evt.initCustomEvent('keydown', false, false, { index: index });
+        keyboard.dispatchEvent(evt);
+
     }
+
 
     function dispatchKeyUp( keyboard ) {
         console.log('up', keyboard);
@@ -89,10 +96,12 @@
 
         keyboard.keyPressed = false;
 
-        /*scope.dispatchEvent({
-            type: 'keyup'
-        });*/
+        var evt = document.createEvent('CustomEvent');
+        evt.initCustomEvent('keyup', false, false, null);
+        keyboard.dispatchEvent(evt);
+        
     }
+
 
     xtag.register('audio-keyboard', {
         lifecycle: {
