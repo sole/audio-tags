@@ -1,19 +1,5 @@
-// TODO refactor away
-var componentPrototype = function(audioContext) {
-	// input: splitter?
-	this.input = audioContext.createGain();
-	// output: gain
-	this.output = audioContext.createGain();
 
-	this.start = function(when) {
-		console.log('prototype start', when);
-	};
-
-	this.stop = function(when) {
-		console.log('prototype stop', when);
-	};
-};
-
+var TagPrototype = require('./TagPrototype');
 var OscillatorVoice = require('./audioComponents/OscillatorVoice');
 
 function register() {
@@ -21,10 +7,13 @@ function register() {
 
 		lifecycle: {
 			created: function() {
+				// TODO this code is ultra freaking ugly, tidy it up
 				this.innerHTML = 'OSC <input type="number" /> Hz';
+				// TODO maybe display below the note for that frequency too
 				var frequency = this.querySelector('input[type=number]');
 				frequency.value = 440;
 				this.frequencyInput = frequency;
+				
 				var self = this;
 				frequency.addEventListener('change', function() {
 					var value = parseInt(frequency.value, 10);
@@ -36,7 +25,7 @@ function register() {
 
 		methods: {
 			init: function(audioContext) {
-				componentPrototype.call(this, audioContext);
+				TagPrototype.call(this, audioContext);
 				this.oscillator = new OscillatorVoice(audioContext);
 				this.oscillator.output.connect(this.output);
 			},
