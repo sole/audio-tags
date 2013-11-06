@@ -3027,18 +3027,22 @@ if (document.readyState === 'complete') {
 
 })();require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"0xpFi4":[function(require,module,exports){
 function register() {
+    
     console.log('Registering Audio Tags');
+
     require('./context').register();
     require('./oscillator').register();
+    require('./mixer').register();
 
     console.log('AudioTags registered');
+
 }
 
 module.exports = {
     register: register
 };
 
-},{"./context":5,"./oscillator":6}],"AudioTags":[function(require,module,exports){
+},{"./context":5,"./mixer":6,"./oscillator":7}],"AudioTags":[function(require,module,exports){
 module.exports=require('0xpFi4');
 },{}],3:[function(require,module,exports){
 
@@ -3054,6 +3058,21 @@ var TagPrototype = function(audioContext) {
 
 	this.stop = function(when) {
 		console.log('prototype stop', when);
+	};
+
+	this.initChildren = function(audioContext) {
+
+		var self = this;
+
+		Array.prototype.slice.call(this.children, 0).forEach(function(child) {
+			if(child.init) {
+				child.init(audioContext);
+				child.output.connect(self.output);
+			} else {
+				console.log('no child init', child);
+			}
+		});
+
 	};
 };
 
@@ -3159,6 +3178,46 @@ module.exports = {
 };
 
 },{}],6:[function(require,module,exports){
+
+var TagPrototype = require('./TagPrototype');
+
+function register() {
+	xtag.register('audio-mixer', {
+
+		lifecycle: {
+			created: function() {
+			}
+		},
+
+		methods: {
+			init: function(audioContext) {
+				TagPrototype.call(this, audioContext);
+				
+				this.initChildren(audioContext);
+
+			}
+		},
+
+		accessors: {
+			frequency: {
+				get: function() {
+					return this.oscillator.frequency;
+				},
+				set: function(v) {
+					v = parseInt(v, 10);
+					this.oscillator.frequency = v;
+					this.frequencyInput.value = v;
+				}
+			}
+		}
+	});
+}
+
+module.exports = {
+	register: register
+};
+
+},{"./TagPrototype":3}],7:[function(require,module,exports){
 
 var TagPrototype = require('./TagPrototype');
 var OscillatorVoice = require('./audioComponents/OscillatorVoice');

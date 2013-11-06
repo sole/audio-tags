@@ -8,3 +8,8 @@ audio-oscillator {
 	display: inline-block;
 	border: 1px solid #666;
 }
+
+audio-mixer {
+	display: block;
+	background: #ccc;
+}
