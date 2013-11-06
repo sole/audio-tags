@@ -3027,6 +3027,10 @@ if (document.readyState === 'complete') {
 
 })();require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"0xpFi4":[function(require,module,exports){
 function register() {
+    console.log('Registering Audio Tags');
+    require('./context').register();
+    require('./oscillator').register();
+
     console.log('AudioTags registered');
 }
 
@@ -3034,7 +3038,78 @@ module.exports = {
     register: register
 };
 
-},{}],"AudioTags":[function(require,module,exports){
+},{"./context":3,"./oscillator":4}],"AudioTags":[function(require,module,exports){
 module.exports=require('0xpFi4');
+},{}],3:[function(require,module,exports){
+function register() {
+	xtag.register('audio-context', {
+		lifecycle: {
+			created: function() {
+				console.log('created audio contex');
+				this.audioContext = new AudioContext();
+			},
+			inserted: function() {
+				console.log('inserted audio context, now going through child nodes and seeing what we do with them');
+
+				var audioContext = this.audioContext;
+
+				Array.prototype.slice.call(this.children, 0).forEach(function(child) {
+					if(child.init) {
+						child.init(audioContext);
+						child.output.connect(audioContext.destination);
+					} else {
+						console.log('no child init', child);
+					}
+				});
+			}
+		}
+	});
+}
+
+module.exports = {
+	register: register
+};
+
+},{}],4:[function(require,module,exports){
+// TODO refactor away
+var componentPrototype = function(audioContext) {
+	// input: splitter?
+	this.input = audioContext.createGain();
+	// output: gain
+	this.output = audioContext.createGain();
+};
+
+function register() {
+	xtag.register('audio-oscillator', {
+		lifecycle: {
+			created: function() {
+				this.innerHTML = 'OSC <input type="number" /> Hz';
+				var frequency = this.querySelector('input[type=number]');
+				frequency.value = 440;
+				var self = this;
+				frequency.addEventListener('change', function() {
+					var value = parseInt(frequency.value, 10);
+					self.audioNode.frequency.value = value;
+				}, false);
+				// TODO Wave type, with spinner...
+
+			}
+		},
+		methods: {
+			init: function(audioContext) {
+				componentPrototype.call(this, audioContext);
+				this.audioNode = audioContext.createOscillator(); // TODO: oscillatorVoice
+				this.audioNode.connect(this.output);
+				console.log(this, this.input, this.output);
+				//this.audioNode.start(0); // TMP
+			}
+		}
+	});
+}
+
+module.exports = {
+	register: register
+};
+
 },{}]},{},[])
 ;
