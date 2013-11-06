@@ -4,36 +4,62 @@ var componentPrototype = function(audioContext) {
 	this.input = audioContext.createGain();
 	// output: gain
 	this.output = audioContext.createGain();
+
+	this.start = function(when) {
+		console.log('prototype start', when);
+	};
+
+	this.stop = function(when) {
+		console.log('prototype stop', when);
+	};
 };
+
+var OscillatorVoice = require('./audioComponents/OscillatorVoice');
 
 function register() {
 	xtag.register('audio-oscillator', {
+
 		lifecycle: {
 			created: function() {
 				this.innerHTML = 'OSC <input type="number" /> Hz';
 				var frequency = this.querySelector('input[type=number]');
 				frequency.value = 440;
+				this.frequencyInput = frequency;
 				var self = this;
 				frequency.addEventListener('change', function() {
 					var value = parseInt(frequency.value, 10);
-					self.audioNode.frequency.value = value;
+					self.oscillator.frequency = value;
 				}, false);
 				// TODO Wave type, with spinner...
-
 			}
 		},
+
 		methods: {
 			init: function(audioContext) {
 				componentPrototype.call(this, audioContext);
-				this.audioNode = audioContext.createOscillator(); // TODO: oscillatorVoice
-				this.audioNode.connect(this.output);
-				console.log(this, this.input, this.output);
-				//this.audioNode.start(0); // TMP
+				this.oscillator = new OscillatorVoice(audioContext);
+				this.oscillator.output.connect(this.output);
+			},
+			start: function(when) {
+				this.oscillator.start(when);
+			},
+			stop: function(when) {
+				this.oscillator.stop(when);
+			}
+		},
+
+		accessors: {
+			frequency: {
+				get: function() {
+					return this.oscillator.frequency;
+				},
+				set: function(v) {
+					v = parseInt(v, 10);
+					this.oscillator.frequency = v;
+					this.frequencyInput.value = v;
+				}
 			}
 		}
-		// TODO accessor -> frequency
-		// set: set freq value + freq input
-		// get: return freq value
 	});
 }
 

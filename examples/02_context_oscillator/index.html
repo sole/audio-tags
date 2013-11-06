@@ -21,7 +21,8 @@
 				
 				var osc = document.querySelector('audio-oscillator');
 				console.log(osc);
-				osc.audioNode.start(0);
+				osc.frequency = 220;
+				osc.start(0);
 				console.log(document.querySelector('audio-context'));
 
             }, false);

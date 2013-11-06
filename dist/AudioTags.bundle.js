@@ -3038,9 +3038,77 @@ module.exports = {
     register: register
 };
 
-},{"./context":3,"./oscillator":4}],"AudioTags":[function(require,module,exports){
+},{"./context":4,"./oscillator":5}],"AudioTags":[function(require,module,exports){
 module.exports=require('0xpFi4');
 },{}],3:[function(require,module,exports){
+// Wraps the 'native' OscillatorNode and ensures there's always one available to play
+// even if it's been destroyed because of a previous stop() call
+function OscillatorVoice(context) {
+	var internalOscillator = null;
+	var output = context.createGain();
+	var waveType = 1;
+	var frequency = 440.0;
+
+	//
+	
+	// TODO attributes frequency + wave type
+	Object.defineProperties(this, {
+		frequency: {
+			set: setFrequency,
+			get: function() {
+				return frequency;
+			}
+		}
+	});
+
+	function setFrequency(v) {
+
+		frequency = v;
+		if(internalOscillator !== null) {
+			internalOscillator.frequency.value = v;
+		}
+
+	}
+
+	//
+	
+	this.output = output;
+
+	this.start = function(when) {
+
+		when = when !== undefined ? when : 0;
+
+		// The oscillator node is recreated here "on demand",
+		// and all the parameters are set too.
+		if(internalOscillator === null) {
+			internalOscillator = context.createOscillator();
+			internalOscillator.type = waveType;
+			internalOscillator.connect(output);
+		}
+
+		internalOscillator.frequency.value = frequency;console.log('set frequency to', frequency);
+		internalOscillator.start(when);
+
+	};
+
+	this.stop = function(when) {
+		
+		if(internalOscillator === null) {
+			return;
+		}
+		
+		when = when !== undefined ? when : 0;
+
+		internalOscillator.stop(when);
+		internalOscillator = null;
+
+	};
+}
+
+module.exports = OscillatorVoice;
+
+
+},{}],4:[function(require,module,exports){
 function register() {
 	xtag.register('audio-context', {
 		lifecycle: {
@@ -3070,38 +3138,67 @@ module.exports = {
 	register: register
 };
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 // TODO refactor away
 var componentPrototype = function(audioContext) {
 	// input: splitter?
 	this.input = audioContext.createGain();
 	// output: gain
 	this.output = audioContext.createGain();
+
+	this.start = function(when) {
+		console.log('prototype start', when);
+	};
+
+	this.stop = function(when) {
+		console.log('prototype stop', when);
+	};
 };
+
+var OscillatorVoice = require('./audioComponents/OscillatorVoice');
 
 function register() {
 	xtag.register('audio-oscillator', {
+
 		lifecycle: {
 			created: function() {
 				this.innerHTML = 'OSC <input type="number" /> Hz';
 				var frequency = this.querySelector('input[type=number]');
 				frequency.value = 440;
+				this.frequencyInput = frequency;
 				var self = this;
 				frequency.addEventListener('change', function() {
 					var value = parseInt(frequency.value, 10);
-					self.audioNode.frequency.value = value;
+					self.oscillator.frequency = value;
 				}, false);
 				// TODO Wave type, with spinner...
-
 			}
 		},
+
 		methods: {
 			init: function(audioContext) {
 				componentPrototype.call(this, audioContext);
-				this.audioNode = audioContext.createOscillator(); // TODO: oscillatorVoice
-				this.audioNode.connect(this.output);
-				console.log(this, this.input, this.output);
-				//this.audioNode.start(0); // TMP
+				this.oscillator = new OscillatorVoice(audioContext);
+				this.oscillator.output.connect(this.output);
+			},
+			start: function(when) {
+				this.oscillator.start(when);
+			},
+			stop: function(when) {
+				this.oscillator.stop(when);
+			}
+		},
+
+		accessors: {
+			frequency: {
+				get: function() {
+					return this.oscillator.frequency;
+				},
+				set: function(v) {
+					v = parseInt(v, 10);
+					this.oscillator.frequency = v;
+					this.frequencyInput.value = v;
+				}
 			}
 		}
 	});
@@ -3111,5 +3208,5 @@ module.exports = {
 	register: register
 };
 
-},{}]},{},[])
+},{"./audioComponents/OscillatorVoice":3}]},{},[])
 ;
