@@ -28,10 +28,8 @@ function register() {
 				this.oscillator.output.connect(this.output);
 
 				// Read attributes set in HTML, if any
-				var f = this.getAttribute('frequency');
-				if(f !== null) {
-					this.frequency = f;
-				}
+				// TODO: read wave type
+				this.initAttributes(['frequency']);
 			},
 			start: function(when) {
 				this.oscillator.start(when);

@@ -3074,6 +3074,17 @@ var TagPrototype = function(audioContext) {
 		});
 
 	};
+
+	this.initAttributes = function(which) {
+		var self = this;
+		which.forEach(function(attr) {
+			var value = self.getAttribute(attr);
+			console.log('init attr', attr, value);
+			if(value !== null) {
+				self[attr] = value;
+			}
+		});
+	};
 };
 
 module.exports = TagPrototype;
@@ -3248,11 +3259,11 @@ function register() {
 				this.oscillator.output.connect(this.output);
 
 				// Read attributes set in HTML, if any
-				var f = this.getAttribute('frequency');
-				console.log(this.getAttribute('whatevers'));
+				/*var f = this.getAttribute('frequency');
 				if(f !== null) {
 					this.frequency = f;
-				}
+				}*/
+				this.initAttributes(['frequency']);
 			},
 			start: function(when) {
 				this.oscillator.start(when);

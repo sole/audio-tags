@@ -27,6 +27,16 @@ var TagPrototype = function(audioContext) {
 		});
 
 	};
+
+	this.initAttributes = function(which) {
+		var self = this;
+		which.forEach(function(attr) {
+			var value = self.getAttribute(attr);
+			if(value !== null) {
+				self[attr] = value;
+			}
+		});
+	};
 };
 
 module.exports = TagPrototype;
