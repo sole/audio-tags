@@ -3030,9 +3030,11 @@ function register() {
     
     console.log('Registering Audio Tags');
 
+    require('./chain').register();
     require('./context').register();
-    require('./oscillator').register();
     require('./mixer').register();
+    require('./oscillator').register();
+    require('./oscilloscope').register();
 
     console.log('AudioTags registered');
 
@@ -3042,7 +3044,7 @@ module.exports = {
     register: register
 };
 
-},{"./context":5,"./mixer":6,"./oscillator":7}],"AudioTags":[function(require,module,exports){
+},{"./chain":5,"./context":6,"./mixer":7,"./oscillator":8,"./oscilloscope":9}],"AudioTags":[function(require,module,exports){
 module.exports=require('0xpFi4');
 },{}],3:[function(require,module,exports){
 
@@ -3060,18 +3062,29 @@ var TagPrototype = function(audioContext) {
 		console.log('prototype stop', when);
 	};
 
+	// Inspired by the visitor pattern... if classes overload initChild, that
+	// implementation will be executed instead of the normal behaviour
+	// (connecting each child output to our output) - see initChild
+	// This allows us to have different initialisations depending on the type of
+	// container node
 	this.initChildren = function(audioContext) {
 
 		var self = this;
 
-		Array.prototype.slice.call(this.children, 0).forEach(function(child) {
-			if(child.init) {
-				child.init(audioContext);
-				child.output.connect(self.output);
-			} else {
-				console.log('no child init', child);
-			}
+		Array.prototype.slice.call(this.children, 0).forEach(function(child, index) {
+			self.initChild(audioContext, child, index);
 		});
+
+	};
+
+	this.initChild = function(audioContext, child, index) {
+		
+		if(child.init) {
+			child.init(audioContext);
+			child.output.connect(this.output);
+		} else {
+			console.log('no child init', child);
+		}
 
 	};
 
@@ -3079,7 +3092,6 @@ var TagPrototype = function(audioContext) {
 		var self = this;
 		which.forEach(function(attr) {
 			var value = self.getAttribute(attr);
-			console.log('init attr', attr, value);
 			if(value !== null) {
 				self[attr] = value;
 			}
@@ -3159,6 +3171,52 @@ module.exports = OscillatorVoice;
 
 
 },{}],5:[function(require,module,exports){
+
+var TagPrototype = require('./TagPrototype');
+
+function register() {
+	xtag.register('audio-chain', {
+
+		lifecycle: {
+			created: function() {
+			}
+		},
+
+		methods: {
+			init: function(audioContext) {
+				TagPrototype.call(this, audioContext);
+				this.initChildren(audioContext);
+			},
+			// Chains connect the nth-child to the nth-1 child (for n>0)
+			initChild: function(audioContext, child, index) {
+				console.log('initialising a child in the chain', child, index);
+				
+				if(child.init) {
+					child.init(audioContext);
+				}
+
+				if(index > 0) {
+					var prevChild = this.children[index - 1];
+					prevChild.output.connect(child.input);
+				}
+
+				var numChildren = this.children.length;
+				if(index === numChildren - 1) {
+					child.output.connect(this.output);
+				}
+
+			}
+		}
+
+	});
+}
+
+module.exports = {
+	register: register
+};
+
+
+},{"./TagPrototype":3}],6:[function(require,module,exports){
 function register() {
 	xtag.register('audio-context', {
 		lifecycle: {
@@ -3188,7 +3246,7 @@ module.exports = {
 	register: register
 };
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 
 var TagPrototype = require('./TagPrototype');
 
@@ -3203,24 +3261,10 @@ function register() {
 		methods: {
 			init: function(audioContext) {
 				TagPrototype.call(this, audioContext);
-				
 				this.initChildren(audioContext);
-
-			}
-		},
-
-		accessors: {
-			frequency: {
-				get: function() {
-					return this.oscillator.frequency;
-				},
-				set: function(v) {
-					v = parseInt(v, 10);
-					this.oscillator.frequency = v;
-					this.frequencyInput.value = v;
-				}
 			}
 		}
+
 	});
 }
 
@@ -3228,7 +3272,7 @@ module.exports = {
 	register: register
 };
 
-},{"./TagPrototype":3}],7:[function(require,module,exports){
+},{"./TagPrototype":3}],8:[function(require,module,exports){
 
 var TagPrototype = require('./TagPrototype');
 var OscillatorVoice = require('./audioComponents/OscillatorVoice');
@@ -3259,10 +3303,7 @@ function register() {
 				this.oscillator.output.connect(this.output);
 
 				// Read attributes set in HTML, if any
-				/*var f = this.getAttribute('frequency');
-				if(f !== null) {
-					this.frequency = f;
-				}*/
+				// TODO: read wave type
 				this.initAttributes(['frequency']);
 			},
 			start: function(when) {
@@ -3292,5 +3333,39 @@ module.exports = {
 	register: register
 };
 
-},{"./TagPrototype":3,"./audioComponents/OscillatorVoice":4}]},{},[])
+},{"./TagPrototype":3,"./audioComponents/OscillatorVoice":4}],9:[function(require,module,exports){
+
+var TagPrototype = require('./TagPrototype');
+
+function register() {
+	xtag.register('audio-oscilloscope', {
+
+		lifecycle: {
+			created: function() {
+				this.innerHTML = 'oscilloscope';
+			}
+		},
+
+		methods: {
+			init: function(audioContext) {
+				TagPrototype.call(this, audioContext);
+				var analyser = audioContext.createAnalyser();
+				this.input.connect(analyser);
+				analyser.connect(this.output);
+				console.log(analyser);
+			}
+		},
+
+		accessors: {
+			// TODO maybe resolution?
+		}
+	});
+}
+
+module.exports = {
+	register: register
+};
+
+
+},{"./TagPrototype":3}]},{},[])
 ;

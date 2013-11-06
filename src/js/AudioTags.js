@@ -2,9 +2,11 @@ function register() {
     
     console.log('Registering Audio Tags');
 
+    require('./chain').register();
     require('./context').register();
-    require('./oscillator').register();
     require('./mixer').register();
+    require('./oscillator').register();
+    require('./oscilloscope').register();
 
     console.log('AudioTags registered');
 
