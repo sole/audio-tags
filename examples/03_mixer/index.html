@@ -11,8 +11,8 @@
 
 		<audio-context>
 			<audio-mixer>
-				<audio-oscillator></audio-oscillator>
-				<audio-oscillator></audio-oscillator>
+				<audio-oscillator frequency="220"></audio-oscillator>
+				<audio-oscillator frequency="440"></audio-oscillator>
 			</audio-mixer>
 		</audio-context>
 
@@ -24,7 +24,6 @@
 				
 				Array.prototype.slice.call(document.querySelectorAll('audio-oscillator'), 0).forEach(function(osc, index) {
 					console.log(osc);
-					osc.frequency = 110 * (index + 1);
 					osc.start(0);
 				});
 

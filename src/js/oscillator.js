@@ -10,13 +10,11 @@ function register() {
 				// TODO this code is ultra freaking ugly, tidy it up
 				this.innerHTML = 'OSC <input type="number" /> Hz';
 				// TODO maybe display below the note for that frequency too
-				var frequency = this.querySelector('input[type=number]');
-				frequency.value = 440;
-				this.frequencyInput = frequency;
+				this.frequencyInput = this.querySelector('input[type=number]');
 				
 				var self = this;
-				frequency.addEventListener('change', function() {
-					var value = parseInt(frequency.value, 10);
+				this.frequencyInput.addEventListener('change', function() {
+					var value = parseInt(this.value, 10);
 					self.oscillator.frequency = value;
 				}, false);
 				// TODO Wave type, with spinner...
@@ -28,6 +26,12 @@ function register() {
 				TagPrototype.call(this, audioContext);
 				this.oscillator = new OscillatorVoice(audioContext);
 				this.oscillator.output.connect(this.output);
+
+				// Read attributes set in HTML, if any
+				var f = this.getAttribute('frequency');
+				if(f !== null) {
+					this.frequency = f;
+				}
 			},
 			start: function(when) {
 				this.oscillator.start(when);
