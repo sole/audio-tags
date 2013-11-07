@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "tween.js": "~0.11.0"
+  }
+}

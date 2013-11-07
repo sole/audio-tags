@@ -9,6 +9,7 @@ function register() {
     require('./oscillator').register();
     require('./oscilloscope').register();
     require('./vumeter').register();
+    require('./waveshaper').register();
 
     console.log('AudioTags registered');
 

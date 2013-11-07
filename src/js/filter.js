@@ -15,6 +15,8 @@ function register() {
 				this.frequencyInput.addEventListener('change', function(e) {
 					self.frequency = parseInt(this.value, 10);
 				}, false);
+
+				// TODO Q, gain
 			}
 		},
 
@@ -29,6 +31,7 @@ function register() {
 				filter.connect(this.output);
 
 				this.frequencyInput.value = filter.frequency.value;
+				// TODO Same for Q, gain
 			},
 		},
 

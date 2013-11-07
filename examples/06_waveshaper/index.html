@@ -7,12 +7,12 @@
     </head>
 	<body>
 
-		<p>A chain with an oscillator, a filter, an oscilloscope and a vumeter should be created and displayed, and the oscillator start playing while the oscilloscope and the vumeter display the output visually. Changing the filter parameters alters the output sound.</p>
+		<p>A chain with an oscillator, a waveshaper, an oscilloscope and a vumeter should be created and displayed, and the oscillator start playing while the oscilloscope and the vumeter display the output visually. Changing the waveshaper parameters affects the final output too.</p>
 
 		<audio-context>
 			<audio-chain>
 				<audio-oscillator frequency="220"></audio-oscillator>
-				<audio-filter type="bandpass"></audio-filter>
+				<audio-waveshaper></audio-waveshaper>
 				<audio-oscilloscope></audio-oscilloscope>
 				<audio-vumeter></audio-vumeter>
 			</audio-chain>
@@ -24,6 +24,7 @@
 
             window.addEventListener('DOMComponentsLoaded', function() {
 
+				document.querySelector('audio-chain').output.gain.value = 0.05;
 				document.querySelector('audio-oscillator').start(0);
 
             }, false);
