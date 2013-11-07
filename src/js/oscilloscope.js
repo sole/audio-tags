@@ -46,7 +46,7 @@ function register() {
 		
 					analyser.getByteTimeDomainData(timeDomainArray);
 
-					ctx.fillStyle = 'rgb(0, 0, 0)';
+					ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
 					ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
 					ctx.lineWidth = 1;
