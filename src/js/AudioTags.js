@@ -7,6 +7,7 @@ function register() {
     require('./mixer').register();
     require('./oscillator').register();
     require('./oscilloscope').register();
+    require('./vumeter').register();
 
     console.log('AudioTags registered');
 
