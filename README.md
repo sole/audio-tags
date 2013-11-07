@@ -3,6 +3,10 @@ a-t
 
 mysterious new experiment
 
+## What is missing
+
+When nodes are inserted or removed after initial page load.
+
 ## notes you might, or not, care about
 
 Nested nodes are created first, all the way up to the hierarchy root.

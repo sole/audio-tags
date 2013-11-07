@@ -13,3 +13,6 @@ audio-mixer {
 	display: block;
 	background: #ccc;
 }
+audio-filter {
+	display: inline-block;
+}

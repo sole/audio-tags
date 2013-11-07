@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf8">
+        <title>Chain</title>
+        <link href="../../dist/AudioTags.bundle.css" rel="stylesheet" media="all" />
+    </head>
+	<body>
+
+		<p>A chain with an oscillator and an oscilloscope should be created and displayed, and the oscillator start playing while the oscilloscope displays its the output visually.</p>
+
+		<audio-context>
+			<audio-chain>
+				<audio-oscillator frequency="220"></audio-oscillator>
+				<audio-filter type="bandpass"></audio-filter>
+				<audio-oscilloscope></audio-oscilloscope>
+				<audio-vumeter></audio-vumeter>
+			</audio-chain>
+		</audio-context>
+
+		<script src="../../dist/AudioTags.bundle.js" type="text/javascript"></script>
+		<script>
+			require('AudioTags').register();
+
+            window.addEventListener('DOMComponentsLoaded', function() {
+
+				document.querySelector('audio-oscillator').start(0);
+
+            }, false);
+		</script>
+
+    </body>
+</html>
+
+
+
+

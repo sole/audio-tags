@@ -3032,6 +3032,7 @@ function register() {
 
     require('./chain').register();
     require('./context').register();
+    require('./filter').register();
     require('./mixer').register();
     require('./oscillator').register();
     require('./oscilloscope').register();
@@ -3045,7 +3046,7 @@ module.exports = {
     register: register
 };
 
-},{"./chain":5,"./context":6,"./mixer":7,"./oscillator":8,"./oscilloscope":9,"./vumeter":10}],"AudioTags":[function(require,module,exports){
+},{"./chain":5,"./context":6,"./filter":7,"./mixer":8,"./oscillator":9,"./oscilloscope":10,"./vumeter":11}],"AudioTags":[function(require,module,exports){
 module.exports=require('0xpFi4');
 },{}],3:[function(require,module,exports){
 
@@ -3254,6 +3255,61 @@ module.exports = {
 var TagPrototype = require('./TagPrototype');
 
 function register() {
+
+	xtag.register('audio-filter', {
+
+		lifecycle: {
+			created: function() {
+				
+				var self = this;
+
+				this.innerHTML = 'FILTER<br /><label>frequency<input class="frequency" type="range" min="10" max="24000" /></label>';
+				this.frequencyInput = this.querySelector('.frequency');
+				this.frequencyInput.addEventListener('change', function(e) {
+					self.frequency = parseInt(this.value, 10);
+				}, false);
+			}
+		},
+
+		methods: {
+			init: function(audioContext) {
+				TagPrototype.call(this, audioContext);
+				
+				var filter = audioContext.createBiquadFilter();
+				this.filter = filter;
+				
+				this.input.connect(filter);
+				filter.connect(this.output);
+
+				this.frequencyInput.value = filter.frequency.value;
+			},
+		},
+
+		accessors: {
+			// TODO Q, gain
+			frequency: {
+				set: function(v) {
+					this.filter.frequency.value = v;
+				},
+				get: function() { return this.filter.frequency.value; }
+			}
+		}
+
+	});
+}
+
+module.exports = {
+	register: register
+};
+
+
+
+
+},{"./TagPrototype":3}],8:[function(require,module,exports){
+
+var TagPrototype = require('./TagPrototype');
+
+function register() {
 	xtag.register('audio-mixer', {
 
 		lifecycle: {
@@ -3275,7 +3331,7 @@ module.exports = {
 	register: register
 };
 
-},{"./TagPrototype":3}],8:[function(require,module,exports){
+},{"./TagPrototype":3}],9:[function(require,module,exports){
 
 var TagPrototype = require('./TagPrototype');
 var OscillatorVoice = require('./audioComponents/OscillatorVoice');
@@ -3336,7 +3392,7 @@ module.exports = {
 	register: register
 };
 
-},{"./TagPrototype":3,"./audioComponents/OscillatorVoice":4}],9:[function(require,module,exports){
+},{"./TagPrototype":3,"./audioComponents/OscillatorVoice":4}],10:[function(require,module,exports){
 
 var TagPrototype = require('./TagPrototype');
 
@@ -3431,7 +3487,7 @@ module.exports = {
 };
 
 
-},{"./TagPrototype":3}],10:[function(require,module,exports){
+},{"./TagPrototype":3}],11:[function(require,module,exports){
 
 var TagPrototype = require('./TagPrototype');
 
@@ -3439,8 +3495,8 @@ var canvasWidth = 200;
 var canvasHeight = 100;
 var canvasHalfWidth = canvasWidth * 0.5;
 var canvasHalfHeight = canvasHeight * 0.5;
-var numSlices = 32;
-var inverseNumSlices = 1.0 / numSlices;
+var numSlices;
+var inverseNumSlices;
 
 function register() {
 	xtag.register('audio-vumeter', {
@@ -3468,7 +3524,7 @@ function register() {
 				var bufferLength = analyser.frequencyBinCount;
 				var timeDomainArray = new Uint8Array(bufferLength);
 
-				numSlices = bufferLength; // * 0.5;
+				numSlices = bufferLength;
 				inverseNumSlices = 1.0 / numSlices;
 				
 				this.input.connect(analyser);

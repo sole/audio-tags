@@ -4,6 +4,7 @@ function register() {
 
     require('./chain').register();
     require('./context').register();
+    require('./filter').register();
     require('./mixer').register();
     require('./oscillator').register();
     require('./oscilloscope').register();
