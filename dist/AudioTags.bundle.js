@@ -4329,6 +4329,20 @@ module.exports = {
 var TagPrototype = require('./TagPrototype');
 var TWEEN = require('tween.js');
 
+var graphs_list = [
+	[ 'Linear.None' ],
+	[ 'Quadratic.In', 'Quadratic.Out', 'Quadratic.InOut' ],
+	[ 'Cubic.In', 'Cubic.Out', 'Cubic.InOut' ],
+	[ 'Quartic.In', 'Quartic.Out', 'Quartic.InOut' ],
+	[ 'Quintic.In', 'Quintic.Out', 'Quintic.InOut' ],
+	[ 'Sinusoidal.In', 'Sinusoidal.Out', 'Sinusoidal.InOut' ],
+	[ 'Exponential.In', 'Exponential.Out', 'Exponential.InOut' ],
+	[ 'Circular.In', 'Circular.Out', 'Circular.InOut' ],
+	[ 'Elastic.In', 'Elastic.Out', 'Elastic.InOut' ],
+	[ 'Back.In', 'Back.Out', 'Back.InOut' ],
+	[ 'Bounce.In', 'Bounce.Out', 'Bounce.InOut' ]
+];
+
 function register() {
 
 	xtag.register('audio-waveshaper', {
@@ -4361,7 +4375,7 @@ function register() {
 				waveshaper.connect(this.output);
 
 				// TODO read function to use from attribute. If null, use default
-				var curveLength = 128;
+				var curveLength = 512;
 				var curve = new Float32Array(curveLength);
 
 				for(var i = 0; i < curveLength; i++) {
