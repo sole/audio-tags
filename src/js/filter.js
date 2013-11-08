@@ -13,11 +13,12 @@ function register() {
 				this.innerHTML = 'FILTER<br />'
 					+ '<label>frequency<input class="frequency" type="range" min="10" max="24000" /></label><br />'
 					+ '<label>Q<input class="q" type="range" min="0.0001" max="1000" /></label><br />'
+					+ '<label>gain<input class="gain" type="range" min="-40" max="40" /></label><br />'
 					+ '<select class="type"></select>';
 				
 				this.frequencyInput = this.querySelector('.frequency');
 				this.frequencyInput.addEventListener('change', function(e) {
-					self.frequency = parseInt(this.value, 10);
+					self.frequency = parseFloat(this.value, 10);
 				}, false);
 
 
@@ -39,12 +40,18 @@ function register() {
 				});
 
 
-				// TODO Q, gain
+				this.gainInput = this.querySelector('.gain');
+				this.gainInput.addEventListener('change', function(e) {
+					self.gain = parseFloat(this.value, 10);
+				}, false);
+
+
 			}
 		},
 
 		methods: {
 			init: function(audioContext) {
+
 				TagPrototype.call(this, audioContext);
 				
 				var filter = audioContext.createBiquadFilter();
@@ -55,14 +62,13 @@ function register() {
 
 				this.frequencyInput.value = filter.frequency.value;
 				this.qInput.value = filter.Q.value;
-
-				// TODO Same for gain
 				this.typeSelect.value = filter.type;
+				this.gainInput.value = filter.gain.value;
+
 			},
 		},
 
 		accessors: {
-			// TODO gain
 			frequency: {
 				set: function(v) {
 					this.filter.frequency.value = v;
@@ -80,7 +86,14 @@ function register() {
 					this.filter.Q.value = v;
 				},
 				get: function() { return this.filter.Q; }
+			},
+			gain: {
+				set: function(v) {
+					this.filter.gain.value = v;
+				},
+				get: function() { return this.filter.gain.value; }
 			}
+
 
 		}
 
