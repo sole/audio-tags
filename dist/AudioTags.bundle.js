@@ -3992,11 +3992,25 @@ function register() {
 				
 				var self = this;
 
-				this.innerHTML = 'FILTER<br /><label>frequency<input class="frequency" type="range" min="10" max="24000" /></label>';
+				this.innerHTML = 'FILTER<br /><label>frequency<input class="frequency" type="range" min="10" max="24000" /></label>'
+					+ '<select class="type"></select>';
+				
 				this.frequencyInput = this.querySelector('.frequency');
 				this.frequencyInput.addEventListener('change', function(e) {
 					self.frequency = parseInt(this.value, 10);
 				}, false);
+
+				this.typeSelect = this.querySelector('.type');
+				this.typeSelect.addEventListener('change', function(e) {
+					self.type = self.typeSelect.value;
+				}, false);
+				["lowpass", "highpass", "bandpass", "lowshelf", "highshelf", "peaking", "notch", "allpass"].forEach(function(t) {
+					var option = document.createElement('option');
+					option.innerHTML = t;
+					option.value = t;
+					self.typeSelect.appendChild(option);
+				});
+
 
 				// TODO Q, gain
 			}
@@ -4024,6 +4038,13 @@ function register() {
 					this.filter.frequency.value = v;
 				},
 				get: function() { return this.filter.frequency.value; }
+			},
+			type: {
+				set: function(v) {
+					console.log('change type', v);
+					this.filter.type = v;
+				},
+				get: function() { return this.filter.type; }
 			}
 		}
 
@@ -4374,7 +4395,7 @@ function register() {
 				this.input.connect(waveshaper);
 				waveshaper.connect(this.output);
 
-				// TODO read function to use from attribute. If null, use default
+				// TODO read which function to use from attribute. If null, use default
 				var curveLength = 512;
 				var curve = new Float32Array(curveLength);
 
@@ -4385,6 +4406,9 @@ function register() {
 				}
 
 				waveshaper.curve = curve;
+
+				// var parts = title.split('.'),
+				// tweenEasing = TWEEN.Easing[parts[0]][parts[1]],
 
 			},
 		},
