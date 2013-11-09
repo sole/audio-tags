@@ -1,3 +1,5 @@
+var TagPrototype = require('./tagPrototype');
+
 function register() {
     
     console.log('Registering Audio Tags');
@@ -16,5 +18,6 @@ function register() {
 }
 
 module.exports = {
-    register: register
+    register: register,
+    TagPrototype: TagPrototype
 };

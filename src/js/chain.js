@@ -22,6 +22,8 @@ function register() {
 				
 				if(child.init) {
 					child.init(audioContext);
+				} else {
+					console.log('chain-no child init?', child);
 				}
 
 				if(index > 0) {
