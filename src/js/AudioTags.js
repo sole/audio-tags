@@ -1,4 +1,5 @@
 var TagPrototype = require('./tagPrototype');
+var MIDIUtils = require('midiutils');
 
 function register() {
     
@@ -20,5 +21,6 @@ function register() {
 
 module.exports = {
     register: register,
-    TagPrototype: TagPrototype
+    TagPrototype: TagPrototype,
+    MIDIUtils: MIDIUtils
 };

@@ -17,7 +17,7 @@
 			</audio-chain>
 		</audio-context>
 
-		<audio-keyboard></audio-keyboard>
+		<audio-keyboard octaves="2"></audio-keyboard>
 
 		<script src="../../dist/AudioTags.bundle.js" type="text/javascript"></script>
 		
@@ -31,8 +31,19 @@
 
             window.addEventListener('DOMComponentsLoaded', function() {
 
+				var minisynth = document.querySelector('mini-synth');
+
 				document.querySelector('audio-chain').output.gain.value = 0.05;
-				document.querySelector('mini-synth').start(0);
+
+				var keyboard = document.querySelector('audio-keyboard');
+
+				keyboard.addEventListener('noteon', function(e) {
+
+					var noteIndex = e.detail.index;
+					minisynth.noteOn(parseInt(noteIndex, 10) + 40);
+					minisynth.start();
+					
+				}, false);
 
             }, false);
 		</script>

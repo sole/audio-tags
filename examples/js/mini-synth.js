@@ -3,6 +3,7 @@
 
 	var AudioTags = require('AudioTags');
 	var TagPrototype = AudioTags.TagPrototype;
+	var MIDIUtils = AudioTags.MIDIUtils;
 
 	console.log('mini-synth is registered');
 
@@ -58,6 +59,14 @@
 					osc.start(when);
 				});
 
+			},
+			noteOn: function(noteNumber) {
+				this.oscillators.forEach(function(osc, index) {
+					var oscNoteNumber = noteNumber + 12 * index;
+					var frequency = MIDIUtils.noteNumberToFrequency(oscNoteNumber);
+					console.log(index, oscNoteNumber, noteNumber, frequency);
+					osc.frequency = frequency;
+				});
 			}
 		}
 

@@ -2678,6 +2678,53 @@ for (z in UIEventProto){
   });
 
 })();require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+var MIDIUtils = (function() {
+
+	var noteMap = {};
+	var noteNumberMap = [];
+	var notes = [ "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" ];
+	
+	for(var i = 0; i < 127; i++) {
+
+		var index = i + 9, // The first note is actually A-0 so we have to transpose up by 9 tones
+			key = notes[index % 12],
+			octave = (index / 12) | 0;
+
+		if(key.length === 1) {
+			key = key + '-';
+		}
+
+		key += octave;
+
+		noteMap[key] = i + 1; // MIDI notes start at 1
+		noteNumberMap[i + 1] = key;
+
+	}
+
+
+	return {
+		noteNameToNoteNumber: function(name) {
+			return noteMap[name];
+		},
+
+		noteNumberToFrequency: function(note) {
+			return 440.0 * Math.pow(2, (note - 49.0) / 12.0);
+		},
+
+		noteNumberToName: function(note) {
+			return noteNumberMap[note];
+		}
+	};
+
+})();
+
+try {
+	module.exports = MIDIUtils;
+} catch(e) {
+}
+
+
+},{}],2:[function(require,module,exports){
 // tween.js - http://github.com/sole/tween.js
 /**
  * @author sole / http://soledadpenades.com
@@ -3409,6 +3456,7 @@ module.exports=TWEEN;
 module.exports=require('0xpFi4');
 },{}],"0xpFi4":[function(require,module,exports){
 var TagPrototype = require('./tagPrototype');
+var MIDIUtils = require('midiutils');
 
 function register() {
     
@@ -3430,10 +3478,11 @@ function register() {
 
 module.exports = {
     register: register,
-    TagPrototype: TagPrototype
+    TagPrototype: TagPrototype,
+    MIDIUtils: MIDIUtils
 };
 
-},{"./chain":6,"./context":7,"./filter":8,"./keyboard":9,"./mixer":10,"./oscillator":11,"./oscilloscope":12,"./tagPrototype":13,"./vumeter":14,"./waveshaper":15}],4:[function(require,module,exports){
+},{"./chain":7,"./context":8,"./filter":9,"./keyboard":10,"./mixer":11,"./oscillator":12,"./oscilloscope":13,"./tagPrototype":14,"./vumeter":15,"./waveshaper":16,"midiutils":1}],5:[function(require,module,exports){
 
 var TagPrototype = function(audioContext) {
 	// input: splitter?
@@ -3489,7 +3538,7 @@ var TagPrototype = function(audioContext) {
 module.exports = TagPrototype;
 
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 // Wraps the 'native' OscillatorNode and ensures there's always one available to play
 // even if it's been destroyed because of a previous stop() call
 function OscillatorVoice(context) {
@@ -3590,7 +3639,7 @@ function OscillatorVoice(context) {
 module.exports = OscillatorVoice;
 
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 
 var TagPrototype = require('./TagPrototype');
 
@@ -3640,7 +3689,7 @@ module.exports = {
 };
 
 
-},{"./TagPrototype":4}],7:[function(require,module,exports){
+},{"./TagPrototype":5}],8:[function(require,module,exports){
 function register() {
 	xtag.register('audio-context', {
 		lifecycle: {
@@ -3670,7 +3719,7 @@ module.exports = {
 	register: register
 };
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 
 var TagPrototype = require('./TagPrototype');
 
@@ -3780,7 +3829,7 @@ module.exports = {
 
 
 
-},{"./TagPrototype":4}],9:[function(require,module,exports){
+},{"./TagPrototype":5}],10:[function(require,module,exports){
 
 function initLayout(kb) {
 
@@ -3854,7 +3903,6 @@ function onDivMouseUp( keyboard, ev ) {
 
 function onKeyDown( keyboard, e ) {
 
-	console.log('REAL keydown');
 	var index = findKeyIndex( keyboard, e );
 
 	if( keyboard.keyPressed ) {
@@ -3893,7 +3941,6 @@ function findKeyIndex( keyboard, e ) {
 
 
 function dispatchNoteOn( keyboard, index ) {
-	console.log('down', keyboard);
 
 	keyboard.keyPressed = true;
 
@@ -3910,7 +3957,6 @@ function dispatchNoteOn( keyboard, index ) {
 
 
 function dispatchNoteOff( keyboard ) {
-	console.log('up', keyboard);
 
 	var activeKey = keyboard.querySelector( '.active' );
 
@@ -3955,7 +4001,7 @@ module.exports = {
 	register: register
 };
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 
 var TagPrototype = require('./TagPrototype');
 
@@ -3981,7 +4027,7 @@ module.exports = {
 	register: register
 };
 
-},{"./TagPrototype":4}],11:[function(require,module,exports){
+},{"./TagPrototype":5}],12:[function(require,module,exports){
 
 var TagPrototype = require('./TagPrototype');
 var OscillatorVoice = require('./audioComponents/OscillatorVoice');
@@ -4069,7 +4115,7 @@ module.exports = {
 	register: register
 };
 
-},{"./TagPrototype":4,"./audioComponents/OscillatorVoice":5}],12:[function(require,module,exports){
+},{"./TagPrototype":5,"./audioComponents/OscillatorVoice":6}],13:[function(require,module,exports){
 
 var TagPrototype = require('./TagPrototype');
 
@@ -4164,9 +4210,9 @@ module.exports = {
 };
 
 
-},{"./TagPrototype":4}],13:[function(require,module,exports){
-module.exports=require(4)
-},{}],14:[function(require,module,exports){
+},{"./TagPrototype":5}],14:[function(require,module,exports){
+module.exports=require(5)
+},{}],15:[function(require,module,exports){
 
 var TagPrototype = require('./TagPrototype');
 
@@ -4271,7 +4317,7 @@ module.exports = {
 
 
 
-},{"./TagPrototype":4}],15:[function(require,module,exports){
+},{"./TagPrototype":5}],16:[function(require,module,exports){
 
 var TagPrototype = require('./TagPrototype');
 var TWEEN = require('tween.js');
@@ -4351,5 +4397,5 @@ module.exports = {
 };
 
 
-},{"./TagPrototype":4,"tween.js":1}]},{},[])
+},{"./TagPrototype":5,"tween.js":2}]},{},[])
 ;

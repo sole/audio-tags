@@ -71,7 +71,6 @@ function onDivMouseUp( keyboard, ev ) {
 
 function onKeyDown( keyboard, e ) {
 
-	console.log('REAL keydown');
 	var index = findKeyIndex( keyboard, e );
 
 	if( keyboard.keyPressed ) {
@@ -110,7 +109,6 @@ function findKeyIndex( keyboard, e ) {
 
 
 function dispatchNoteOn( keyboard, index ) {
-	console.log('down', keyboard);
 
 	keyboard.keyPressed = true;
 
@@ -127,7 +125,6 @@ function dispatchNoteOn( keyboard, index ) {
 
 
 function dispatchNoteOff( keyboard ) {
-	console.log('up', keyboard);
 
 	var activeKey = keyboard.querySelector( '.active' );
 
