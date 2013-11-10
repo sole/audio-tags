@@ -18,13 +18,13 @@ function register() {
 				
 				this.frequencyInput = this.querySelector('.frequency');
 				this.frequencyInput.addEventListener('change', function(e) {
-					self.frequency = parseFloat(this.value, 10);
+					self.frequency = parseFloat(this.value);
 				}, false);
 
 
 				this.qInput = this.querySelector('.q');
 				this.qInput.addEventListener('change', function(e) {
-					self.q = parseFloat(this.value, 10);
+					self.q = parseFloat(this.value);
 				}, false);
 
 
@@ -42,7 +42,7 @@ function register() {
 
 				this.gainInput = this.querySelector('.gain');
 				this.gainInput.addEventListener('change', function(e) {
-					self.gain = parseFloat(this.value, 10);
+					self.gain = parseFloat(this.value);
 				}, false);
 
 

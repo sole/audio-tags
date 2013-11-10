@@ -5,6 +5,7 @@ function OscillatorVoice(context) {
 	var output = context.createGain();
 	var waveType = 1;
 	var frequency = 440.0;
+	var type = 'sine';
 
 	//
 	
@@ -15,8 +16,15 @@ function OscillatorVoice(context) {
 			get: function() {
 				return frequency;
 			}
+		},
+		type: {
+			set: setType,
+			get: function() {
+				return type;
+			}
 		}
 	});
+
 
 	function setFrequency(v) {
 
@@ -26,6 +34,18 @@ function OscillatorVoice(context) {
 		}
 
 	}
+
+
+	function setType(v) {
+
+		frequency = v;
+		if(internalOscillator !== null) {
+			internalOscillator.type = v;
+		}
+
+	}
+
+
 
 	//
 	

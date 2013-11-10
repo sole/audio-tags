@@ -24,6 +24,7 @@
 				this.appendChild(mixer);
 				for(var i = 0; i < 2; i++) {
 					var osc = document.createElement('audio-oscillator');
+					osc.frequency = 110 * (i+1);
 					mixer.appendChild(osc);
 				}
 			},
@@ -43,6 +44,7 @@
 				console.log('the synth has', this.oscillators.length, 'oscillators');
 
 			},
+			// TODO note = -> con las notas y las octavas, tracatra
 			start: function(when) {
 				this.oscillators.forEach(function(osc) {
 					osc.start(when);
