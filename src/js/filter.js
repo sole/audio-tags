@@ -10,11 +10,11 @@ function register() {
 				
 				var self = this;
 
-				this.innerHTML = 'FILTER<br />'
-					+ '<label>frequency<input class="frequency" type="range" min="10" max="24000" /></label><br />'
-					+ '<label>Q<input class="q" type="range" min="0.0001" max="1000" /></label><br />'
-					+ '<label>gain<input class="gain" type="range" min="-40" max="40" /></label><br />'
-					+ '<select class="type"></select>';
+				this.innerHTML = 'FILTER<br />' +
+					'<label>frequency<input class="frequency" type="range" min="10" max="24000" /></label><br />' +
+					'<label>Q<input class="q" type="range" min="0.0001" max="1000" /></label><br />' +
+					'<label>gain<input class="gain" type="range" min="-40" max="40" /></label><br />' +
+					'<select class="type"></select>';
 				
 				this.frequencyInput = this.querySelector('.frequency');
 				this.frequencyInput.addEventListener('change', function(e) {
