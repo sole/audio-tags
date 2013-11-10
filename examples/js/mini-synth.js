@@ -56,7 +56,7 @@
 			},
 			stop: function(when) {
 				this.oscillators.forEach(function(osc) {
-					osc.start(when);
+					osc.stop(when);
 				});
 
 			},
@@ -64,9 +64,11 @@
 				this.oscillators.forEach(function(osc, index) {
 					var oscNoteNumber = noteNumber + 12 * index;
 					var frequency = MIDIUtils.noteNumberToFrequency(oscNoteNumber);
-					console.log(index, oscNoteNumber, noteNumber, frequency);
 					osc.frequency = frequency;
 				});
+			},
+			noteOff: function() {
+				this.stop();
 			}
 		}
 

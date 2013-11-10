@@ -45,7 +45,14 @@
 					
 				}, false);
 
-            }, false);
+				keyboard.addEventListener('noteoff', function(e) {
+
+					minisynth.noteOff();
+					
+				}, false);
+
+			}, false);
+
 		</script>
 
     </body>
