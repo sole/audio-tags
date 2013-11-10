@@ -3417,6 +3417,7 @@ function register() {
     require('./chain').register();
     require('./context').register();
     require('./filter').register();
+    require('./keyboard').register();
     require('./mixer').register();
     require('./oscillator').register();
     require('./oscilloscope').register();
@@ -3432,7 +3433,7 @@ module.exports = {
     TagPrototype: TagPrototype
 };
 
-},{"./chain":6,"./context":7,"./filter":8,"./mixer":9,"./oscillator":10,"./oscilloscope":11,"./tagPrototype":12,"./vumeter":13,"./waveshaper":14}],4:[function(require,module,exports){
+},{"./chain":6,"./context":7,"./filter":8,"./keyboard":9,"./mixer":10,"./oscillator":11,"./oscilloscope":12,"./tagPrototype":13,"./vumeter":14,"./waveshaper":15}],4:[function(require,module,exports){
 
 var TagPrototype = function(audioContext) {
 	// input: splitter?
@@ -3781,6 +3782,180 @@ module.exports = {
 
 },{"./TagPrototype":4}],9:[function(require,module,exports){
 
+function initLayout(kb) {
+
+	var numBlacks = kb.blacks.length;
+
+	kb.innerHTML = '';
+	kb.classList.add('keyboard');
+	
+	for(var i = 0; i < kb.numOctaves; i++) {
+
+		for(var j = 0; j < numBlacks; j++) {
+
+			var isBlack = kb.blacks[j],
+				keyDiv = document.createElement( 'div' ),
+				index = j + numBlacks * i,
+				label = kb.keyboardLayout[ index ];
+
+			keyDiv.className = isBlack ? kb.keyBlackClass : kb.keyClass;
+			keyDiv.innerHTML = label;
+			keyDiv.dataset.index = index;
+
+			keyDiv.addEventListener('mousedown', makeCallback(kb, onDivMouseDown), false);
+			keyDiv.addEventListener('mouseup', makeCallback(kb, onDivMouseUp), false);
+
+			kb.keys.push( keyDiv );
+
+			kb.appendChild( keyDiv );
+
+		}
+	}
+
+	kb.tabIndex = 1; // TODO what if there's more than one kb
+	kb.addEventListener('keydown', makeCallback(kb, onKeyDown), false);
+	kb.addEventListener('keyup', makeCallback(kb, onKeyUp), false);
+
+}
+
+
+function makeCallback(kb, fn) {
+
+	var cb = function(e) {
+		fn(kb, e);
+	};
+
+	return cb;
+
+}
+
+
+function onDivMouseDown( keyboard, ev ) {
+
+	if( keyboard.keyPressed ) {
+		return;
+	}
+
+	var key = ev.target;
+
+	dispatchNoteOn( keyboard, key.dataset.index );
+
+}
+
+
+function onDivMouseUp( keyboard, ev ) {
+
+	if( keyboard.keyPressed ) {
+		dispatchNoteOff( keyboard );
+	}
+
+}
+
+
+function onKeyDown( keyboard, e ) {
+
+	console.log('REAL keydown');
+	var index = findKeyIndex( keyboard, e );
+
+	if( keyboard.keyPressed ) {
+		return;
+	}
+
+	if( index === -1 || e.altKey || e.altGraphKey || e.ctrlKey || e.metaKey || e.shiftKey ) {
+		// no further processing
+		return;
+	}
+
+	dispatchNoteOn( keyboard, index );
+
+}
+
+
+function onKeyUp( keyboard, e ) {
+
+	// Only fire key up if the key is in the defined layout
+	if( findKeyIndex( keyboard, e ) !== -1 ) {
+		dispatchNoteOff( keyboard );
+	}
+
+}
+
+
+function findKeyIndex( keyboard, e ) {
+
+	var keyCode = e.keyCode || e.which,
+		keyChar = String.fromCharCode( keyCode ),
+		index = keyboard.keyboardLayout.indexOf( keyChar );
+
+	return index;
+
+}
+
+
+function dispatchNoteOn( keyboard, index ) {
+	console.log('down', keyboard);
+
+	keyboard.keyPressed = true;
+
+	var key = keyboard.keys[index],
+		currentClass = key.className;
+
+	key.classList.add('active');
+
+	var evt = document.createEvent('CustomEvent');
+	evt.initCustomEvent('noteon', false, false, { index: index });
+	keyboard.dispatchEvent(evt);
+
+}
+
+
+function dispatchNoteOff( keyboard ) {
+	console.log('up', keyboard);
+
+	var activeKey = keyboard.querySelector( '.active' );
+
+	if( activeKey ) {
+		activeKey.classList.remove('active');
+	}
+
+	keyboard.keyPressed = false;
+
+	var evt = document.createEvent('CustomEvent');
+	evt.initCustomEvent('noteoff', false, false, null);
+	keyboard.dispatchEvent(evt);
+	
+}
+
+
+
+function register() {
+
+    xtag.register('audio-keyboard', {
+        lifecycle: {
+            created: function() {
+                // TODO read attributes
+                this.numOctaves = 1;
+                this.keyClass = 'key';
+                this.keyBlackClass = 'key black';
+                this.keyboardLayout = 'ZSXDCVGBHNJMQ2W3ER5T6Y7U'.split('');
+                this.blacks = [ false, true, false, true, false, false, true, false, true, false, true, false ];
+                
+                this.keys = [];
+
+                initLayout(this);
+
+            },
+        }
+    });
+
+}
+
+module.exports = {
+	register: register
+};
+
+},{}],10:[function(require,module,exports){
+
 var TagPrototype = require('./TagPrototype');
 
 function register() {
@@ -3805,7 +3980,7 @@ module.exports = {
 	register: register
 };
 
-},{"./TagPrototype":4}],10:[function(require,module,exports){
+},{"./TagPrototype":4}],11:[function(require,module,exports){
 
 var TagPrototype = require('./TagPrototype');
 var OscillatorVoice = require('./audioComponents/OscillatorVoice');
@@ -3893,7 +4068,7 @@ module.exports = {
 	register: register
 };
 
-},{"./TagPrototype":4,"./audioComponents/OscillatorVoice":5}],11:[function(require,module,exports){
+},{"./TagPrototype":4,"./audioComponents/OscillatorVoice":5}],12:[function(require,module,exports){
 
 var TagPrototype = require('./TagPrototype');
 
@@ -3988,9 +4163,9 @@ module.exports = {
 };
 
 
-},{"./TagPrototype":4}],12:[function(require,module,exports){
+},{"./TagPrototype":4}],13:[function(require,module,exports){
 module.exports=require(4)
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 
 var TagPrototype = require('./TagPrototype');
 
@@ -4095,7 +4270,7 @@ module.exports = {
 
 
 
-},{"./TagPrototype":4}],14:[function(require,module,exports){
+},{"./TagPrototype":4}],15:[function(require,module,exports){
 
 var TagPrototype = require('./TagPrototype');
 var TWEEN = require('tween.js');
