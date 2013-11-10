@@ -3494,7 +3494,6 @@ module.exports = TagPrototype;
 function OscillatorVoice(context) {
 	var internalOscillator = null;
 	var output = context.createGain();
-	var waveType = 1;
 	var frequency = 440.0;
 	var type = 'sine';
 	var gain = 1.0;
@@ -3564,7 +3563,7 @@ function OscillatorVoice(context) {
 		// and all the parameters are set too.
 		if(internalOscillator === null) {
 			internalOscillator = context.createOscillator();
-			internalOscillator.type = waveType;
+			internalOscillator.type = type;
 			internalOscillator.connect(output);
 		}
 
