@@ -3934,7 +3934,8 @@ function register() {
         lifecycle: {
             created: function() {
                 // TODO read attributes
-                this.numOctaves = 1;
+				var numOctaves = this.getAttribute('octaves');
+                this.numOctaves = numOctaves !== null ? Math.min(2, parseInt(numOctaves, 10)) : 1;
                 this.keyClass = 'key';
                 this.keyBlackClass = 'key black';
                 this.keyboardLayout = 'ZSXDCVGBHNJMQ2W3ER5T6Y7U'.split('');
