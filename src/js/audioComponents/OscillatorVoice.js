@@ -6,6 +6,7 @@ function OscillatorVoice(context) {
 	var waveType = 1;
 	var frequency = 440.0;
 	var type = 'sine';
+	var gain = 1.0;
 
 	//
 	
@@ -22,7 +23,13 @@ function OscillatorVoice(context) {
 			get: function() {
 				return type;
 			}
-		}
+		},
+		gain: {
+			set: setGain,
+			get: function() {
+				return gain;
+			}
+		},	
 	});
 
 
@@ -45,6 +52,13 @@ function OscillatorVoice(context) {
 
 	}
 
+
+	function setGain(v) {
+
+		gain = v;
+		output.gain.value = v;
+
+	}
 
 
 	//

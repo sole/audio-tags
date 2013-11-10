@@ -46,7 +46,10 @@
 			},
 			// TODO note = -> con las notas y las octavas, tracatra
 			start: function(when) {
+				// clumsy attempt at not saturating the output
+				var oscGain = this.oscillators.length > 0 ? 1.0 / this.oscillators.length : 1.0;
 				this.oscillators.forEach(function(osc) {
+					osc.gain = oscGain;
 					osc.start(when);
 				});
 			},
