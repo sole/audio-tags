@@ -2683,12 +2683,13 @@ var MIDIUtils = (function() {
 	var noteMap = {};
 	var noteNumberMap = [];
 	var notes = [ "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" ];
-	
+
+
 	for(var i = 0; i < 127; i++) {
 
-		var index = i + 9, // The first note is actually A-0 so we have to transpose up by 9 tones
-			key = notes[index % 12],
-			octave = (index / 12) | 0;
+		var index = i,
+            key = notes[index % 12],
+			octave = ((index / 12) | 0) - 1; // MIDI scale starts at octave = -1
 
 		if(key.length === 1) {
 			key = key + '-';
@@ -2696,24 +2697,35 @@ var MIDIUtils = (function() {
 
 		key += octave;
 
-		noteMap[key] = i + 1; // MIDI notes start at 1
-		noteNumberMap[i + 1] = key;
+		noteMap[key] = i;
+        noteNumberMap[i] = key;
 
 	}
 
 
+    function getBaseLog(value, base) {
+        return Math.log(value) / Math.log(base);
+    }
+
+
 	return {
+
 		noteNameToNoteNumber: function(name) {
 			return noteMap[name];
 		},
 
 		noteNumberToFrequency: function(note) {
-			return 440.0 * Math.pow(2, (note - 49.0) / 12.0);
+			return 440.0 * Math.pow(2, (note - 69.0) / 12.0);
 		},
 
 		noteNumberToName: function(note) {
 			return noteNumberMap[note];
+		},
+
+		frequencyToNoteNumber: function(f) {
+			return Math.round(12.0 * getBaseLog(f / 440.0, 2) + 69);
 		}
+
 	};
 
 })();
@@ -4031,6 +4043,7 @@ module.exports = {
 
 var TagPrototype = require('./TagPrototype');
 var OscillatorVoice = require('./audioComponents/OscillatorVoice');
+var MIDIUtils = require('midiutils');
 
 function register() {
 	xtag.register('audio-oscillator', {
@@ -4038,16 +4051,12 @@ function register() {
 		lifecycle: {
 			created: function() {
 				this.innerHTML = 'OSC<br />' + 
+					'<label><select class="type"></select> type</label><br />' +
 					'<label><input type="number" min="0" max="24000" /> Hz</label><br />' +
-					'<label><select class="type"></select> type</label>';
-				// TODO maybe display below the note for that frequency too
-				this.frequencyInput = this.querySelector('input[type=number]');
+					'<label><span></span></label>';
+
 				
 				var self = this;
-				this.frequencyInput.addEventListener('change', function() {
-					var value = parseFloat(this.value);
-					self.oscillator.frequency = value;
-				}, false);
 
 				// TODO Wave type but with spinner...
 
@@ -4061,6 +4070,16 @@ function register() {
 					option.value = t;
 					self.typeSelect.appendChild(option);
 				});
+
+				// TODO maybe display below the note for that frequency too
+				this.frequencyInput = this.querySelector('input[type=number]');
+				this.noteSpan = this.querySelector('span');
+				
+
+				this.frequencyInput.addEventListener('change', function() {
+					var value = parseFloat(this.value);
+					self.oscillator.frequency = value;
+				}, false);
 
 			}
 		},
@@ -4088,11 +4107,12 @@ function register() {
 					return this.oscillator.frequency;
 				},
 				set: function(v) {
-					v = parseInt(v, 10);
+					v = parseFloat(v);
 					if(this.oscillator) {
 						this.oscillator.frequency = v;
 					}
 					this.frequencyInput.value = v;
+					this.noteSpan.innerHTML = MIDIUtils.noteNumberToName(MIDIUtils.frequencyToNoteNumber(v));
 				},
 			},
 			type: {
@@ -4115,7 +4135,7 @@ module.exports = {
 	register: register
 };
 
-},{"./TagPrototype":5,"./audioComponents/OscillatorVoice":6}],13:[function(require,module,exports){
+},{"./TagPrototype":5,"./audioComponents/OscillatorVoice":6,"midiutils":1}],13:[function(require,module,exports){
 
 var TagPrototype = require('./TagPrototype');
 

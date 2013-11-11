@@ -1,6 +1,7 @@
 
 var TagPrototype = require('./TagPrototype');
 var OscillatorVoice = require('./audioComponents/OscillatorVoice');
+var MIDIUtils = require('midiutils');
 
 function register() {
 	xtag.register('audio-oscillator', {
@@ -8,16 +9,12 @@ function register() {
 		lifecycle: {
 			created: function() {
 				this.innerHTML = 'OSC<br />' + 
+					'<label><select class="type"></select> type</label><br />' +
 					'<label><input type="number" min="0" max="24000" /> Hz</label><br />' +
-					'<label><select class="type"></select> type</label>';
-				// TODO maybe display below the note for that frequency too
-				this.frequencyInput = this.querySelector('input[type=number]');
+					'<label><span></span></label>';
+
 				
 				var self = this;
-				this.frequencyInput.addEventListener('change', function() {
-					var value = parseFloat(this.value);
-					self.oscillator.frequency = value;
-				}, false);
 
 				// TODO Wave type but with spinner...
 
@@ -31,6 +28,16 @@ function register() {
 					option.value = t;
 					self.typeSelect.appendChild(option);
 				});
+
+				// TODO maybe display below the note for that frequency too
+				this.frequencyInput = this.querySelector('input[type=number]');
+				this.noteSpan = this.querySelector('span');
+				
+
+				this.frequencyInput.addEventListener('change', function() {
+					var value = parseFloat(this.value);
+					self.oscillator.frequency = value;
+				}, false);
 
 			}
 		},
@@ -58,11 +65,12 @@ function register() {
 					return this.oscillator.frequency;
 				},
 				set: function(v) {
-					v = parseInt(v, 10);
+					v = parseFloat(v);
 					if(this.oscillator) {
 						this.oscillator.frequency = v;
 					}
 					this.frequencyInput.value = v;
+					this.noteSpan.innerHTML = MIDIUtils.noteNumberToName(MIDIUtils.frequencyToNoteNumber(v));
 				},
 			},
 			type: {
