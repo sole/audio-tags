@@ -1,5 +1,8 @@
 
 var TagPrototype = function(audioContext) {
+
+    this.classList.add('audio');
+
 	// input: splitter?
 	this.input = audioContext.createGain();
 	// output: gain

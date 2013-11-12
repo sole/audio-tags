@@ -70,6 +70,7 @@ function register() {
 						this.oscillator.frequency = v;
 					}
 					this.frequencyInput.value = v;
+                    console.log('set', v);
 					this.noteSpan.innerHTML = MIDIUtils.noteNumberToName(MIDIUtils.frequencyToNoteNumber(v));
 				},
 			},

@@ -1,18 +1,11 @@
-
+.audio {
+    border: 1px solid red;
+}
 audio-context {
 	display: block;
 	border: 1px solid black;
 }
 
-audio-oscillator {
-	display: inline-block;
-	border: 1px solid #666;
-}
-
-audio-mixer {
-	display: block;
-	background: #ccc;
-}
 audio-filter {
 	display: inline-block;
 }
@@ -50,3 +43,13 @@ audio-keyboard {
 .key:active, .key.active {
     background: #ff0;
 }
+audio-mixer {
+	display: block;
+	background: #ccc;
+}
+audio-oscillator {
+	display: inline-block;
+	border: 1px solid #666;
+    padding: 1rem;
+}
+

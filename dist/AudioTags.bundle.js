@@ -3497,6 +3497,9 @@ module.exports = {
 },{"./chain":7,"./context":8,"./filter":9,"./keyboard":10,"./mixer":11,"./oscillator":12,"./oscilloscope":13,"./tagPrototype":14,"./vumeter":15,"./waveshaper":16,"midiutils":1}],5:[function(require,module,exports){
 
 var TagPrototype = function(audioContext) {
+
+    this.classList.add('audio');
+
 	// input: splitter?
 	this.input = audioContext.createGain();
 	// output: gain
@@ -4112,6 +4115,7 @@ function register() {
 						this.oscillator.frequency = v;
 					}
 					this.frequencyInput.value = v;
+                    console.log('set', v);
 					this.noteSpan.innerHTML = MIDIUtils.noteNumberToName(MIDIUtils.frequencyToNoteNumber(v));
 				},
 			},
