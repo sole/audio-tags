@@ -26,13 +26,15 @@
 				
 				var mixer = document.createElement('audio-mixer');
 				chain.appendChild(mixer);
-				for(var i = 0; i < 2; i++) {
+
+                for(var i = 0; i < 2; i++) {
 					var osc = document.createElement('audio-oscillator');
 					osc.frequency = 110 * (i+1);
 					mixer.appendChild(osc);
 				}
 
                 var filter = document.createElement('audio-filter');
+                filter.setAttribute('type', 'allpass');
                 chain.appendChild(filter);
 
 			},
@@ -49,7 +51,6 @@
 				this.initChildren(audioContext);
 
 				this.oscillators = Array.prototype.slice.call(this.querySelectorAll('audio-oscillator'));
-				console.log('the synth has', this.oscillators.length, 'oscillators');
 
 			},
 			

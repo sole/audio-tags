@@ -14,7 +14,7 @@ function register() {
 					'<label>frequency<input class="frequency" type="range" min="10" max="24000" /></label><br />' +
 					'<label>Q<input class="q" type="range" min="0.0001" max="1000" /></label><br />' +
 					'<label>gain<input class="gain" type="range" min="-40" max="40" /></label><br />' +
-					'<select class="type"></select>';
+					'<label>type <select class="type"></select></label>';
 				
 				this.frequencyInput = this.querySelector('.frequency');
 				this.frequencyInput.addEventListener('change', function(e) {
@@ -65,6 +65,9 @@ function register() {
 				this.typeSelect.value = filter.type;
 				this.gainInput.value = filter.gain.value;
 
+				// Read attributes set in HTML, if any
+				this.initAttributes(['type']);
+
 			},
 		},
 
@@ -77,7 +80,10 @@ function register() {
 			},
 			type: {
 				set: function(v) {
-					this.filter.type = v;
+					if(this.filter) {
+						this.filter.type = v;
+						this.typeSelect.value = v;
+					}
 				},
 				get: function() { return this.filter.type; }
 			},
