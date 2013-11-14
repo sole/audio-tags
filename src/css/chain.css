@@ -1,3 +1,25 @@
+audio-chain {
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-left-width: 4px;
+}
+
+audio-chain > * {
+    display: inline-block;
+    margin-right: 0.5rem;
+}
+
+audio-chain > *:last-child {
+    margin: 0;
+}
+
+/*audio-chain {
+    position: relative;
+    display: block;
+    text-align: left;
+    vertical-align: top;
+}
+
 audio-chain > *:after {
     content: " ⇨ ";
     display: inline-block;
@@ -11,4 +33,4 @@ audio-chain > *:after {
 audio-chain > *:last-child:after {
     background: #ff0;
     content: none;
-}
+}*/

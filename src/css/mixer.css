@@ -1,4 +1,16 @@
 audio-mixer {
+	display: inline-block;
+	xbackground: #ccc;
+	border: 1px solid #444;
+	border-top-width: 4px;
+}
+
+audio-mixer > * {
 	display: block;
-	background: #ccc;
+	border-bottom: 1px solid #ccc;
+	padding: 1rem;
+}
+
+audio-mixer > *:last-child {
+	border: none;
 }

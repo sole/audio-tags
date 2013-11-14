@@ -8,7 +8,7 @@ function register() {
 
 		lifecycle: {
 			created: function() {
-				this.innerHTML = 'OSC<br />' + 
+				this.innerHTML = 'OSCILLATOR<br />' + 
 					'<label><select class="type"></select> type</label><br />' +
 					//'<label><input type="number" min="0" max="24000" /> Hz</label><br />' +
 					'<label class="frequency"><input type="range" min="1" max="12000" step="0.5" /><span></span> Hz</label><br />' +

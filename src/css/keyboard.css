@@ -1,6 +1,7 @@
 audio-keyboard {
     display: inline-block;
-    border: 20px groove black;
+    border: 10px groove black;
+    font-family: Helvetica, Arial, sans-serif;
 }
 
 .key {

@@ -19,7 +19,9 @@
 
 		<audio-keyboard octaves="2"></audio-keyboard>
 
-		<button>Become a rockstar</button>
+		<div>
+			<button>Become a rockstar</button>
+		</div>
 
 		<script src="../../dist/AudioTags.bundle.js" type="text/javascript"></script>
 		
@@ -56,6 +58,7 @@
 				var btn = document.querySelector('button');
 				btn.addEventListener('click', function() {
 					minisynth.classList.add('rockstar');
+					btn.innerHTML = '\\m/';
 				}, false);
 
 			}, false);

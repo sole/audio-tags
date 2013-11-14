@@ -1,0 +1,32 @@
+mini-synth {
+	display: inline-block;
+}
+
+mini-synth > audio-mixer, mini-synth audio-chain {
+	border-width: 0;
+}
+
+.rockstar {
+	transition: all 0.5s ease-in;
+}
+
+mini-synth.rockstar {
+	background: #ccc;
+    background-image: url(leopard.jpg);
+    background-repeat: no-repeat;
+	color: #fff;
+	text-shadow: 1px 1px 0px rgba(0, 0, 0, 1);
+	box-shadow: 0px 0px 1rem rgba(0, 0, 0, 0.6);
+	margin: 1rem;
+	border-color: #333;
+}
+
+mini-synth.rockstar, mini-synth.rockstar > * > .audio {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 1rem;
+}
+
+mini-synth.rockstar > audio-mixer, mini-synth.rockstar > audio-chain > * {
+	background: linear-gradient(0deg, rgba(100, 100, 100, 0.8), rgba(200, 200, 200, 0.9));
+}

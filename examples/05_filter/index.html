@@ -1,20 +1,19 @@
 <!doctype html>
 <html>
-    <head>
-        <meta charset="utf8">
-        <title>Chain</title>
-        <link href="../../dist/AudioTags.bundle.css" rel="stylesheet" media="all" />
-    </head>
+	<head>
+		<meta charset="utf8">
+		<title>Chain</title>
+		<link href="../../dist/AudioTags.bundle.css" rel="stylesheet" media="all" />
+	</head>
 	<body>
 
-		<p>A chain with an oscillator, a filter, an oscilloscope and a vumeter should be created and displayed, and the oscillator start playing while the oscilloscope and the vumeter display the output visually. Changing the filter parameters alters the output sound.</p>
+		<p>A chain with an oscillator, a filter, and an oscilloscope should be created and displayed, and the oscillator start playing while the oscilloscope and the vumeter display the output visually. Changing the filter parameters alters the output sound.</p>
 
 		<audio-context>
 			<audio-chain>
 				<audio-oscillator frequency="220"></audio-oscillator>
 				<audio-filter type="bandpass"></audio-filter>
 				<audio-oscilloscope></audio-oscilloscope>
-				<audio-vumeter></audio-vumeter>
 			</audio-chain>
 		</audio-context>
 
@@ -22,14 +21,14 @@
 		<script>
 			require('AudioTags').register();
 
-            window.addEventListener('DOMComponentsLoaded', function() {
+			window.addEventListener('DOMComponentsLoaded', function() {
 
 				document.querySelector('audio-oscillator').start(0);
 
-            }, false);
+			}, false);
 		</script>
 
-    </body>
+	</body>
 </html>
 
 

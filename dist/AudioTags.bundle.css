@@ -1,7 +1,33 @@
 .audio {
-    border: 1px solid red;
+    /*background: #eee;
+    border: 1px solid #333;
     display: inline-block;
+    padding: 0.1rem;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);*/
+    font-family: Helvetica, Arial, sans-serif;
 }
+audio-chain {
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-left-width: 4px;
+}
+
+audio-chain > * {
+    display: inline-block;
+    margin-right: 0.5rem;
+}
+
+audio-chain > *:last-child {
+    margin: 0;
+}
+
+/*audio-chain {
+    position: relative;
+    display: block;
+    text-align: left;
+    vertical-align: top;
+}
+
 audio-chain > *:after {
     content: " ⇨ ";
     display: inline-block;
@@ -15,18 +41,23 @@ audio-chain > *:after {
 audio-chain > *:last-child:after {
     background: #ff0;
     content: none;
-}
+}*/
 audio-context {
 	display: block;
-	border: 1px solid black;
+	border: 1px solid #666;
+    padding: 0.1rem;
 }
 
+audio-context > * {
+    width: 100;
+}
 audio-filter {
-	display: inline-block;
+	/*display: inline-block;*/
 }
 audio-keyboard {
     display: inline-block;
-    border: 20px groove black;
+    border: 10px groove black;
+    font-family: Helvetica, Arial, sans-serif;
 }
 
 .key {
@@ -59,12 +90,24 @@ audio-keyboard {
     background: #ff0;
 }
 audio-mixer {
-	display: block;
-	background: #ccc;
-}
-audio-oscillator {
 	display: inline-block;
-	border: 1px solid #666;
-    padding: 1rem;
+	xbackground: #ccc;
+	border: 1px solid #444;
+	border-top-width: 4px;
 }
 
+audio-mixer > * {
+	display: block;
+	border-bottom: 1px solid #ccc;
+	padding: 1rem;
+}
+
+audio-mixer > *:last-child {
+	border: none;
+}
+audio-oscillator {
+}
+
+audio-oscilloscope {
+	display: inline-block;
+}
