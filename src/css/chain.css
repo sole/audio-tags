@@ -1,0 +1,14 @@
+audio-chain > *:after {
+    content: " ⇨ ";
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 3rem;
+    height: 100%;
+    background: #eee;
+    line-height: 100%;
+}
+
+audio-chain > *:last-child:after {
+    background: #ff0;
+    content: none;
+}
