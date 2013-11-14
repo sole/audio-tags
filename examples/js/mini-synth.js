@@ -20,14 +20,21 @@
 						'<audio-oscillator frequency="220"></audio-oscillator>' + 
 						'<audio-oscillator frequency="440"></audio-oscillator>' + 
 					'</audio-mixer>';*/
+
+                var chain = document.createElement('audio-chain');
+                this.appendChild(chain);
 				
 				var mixer = document.createElement('audio-mixer');
-				this.appendChild(mixer);
+				chain.appendChild(mixer);
 				for(var i = 0; i < 2; i++) {
 					var osc = document.createElement('audio-oscillator');
 					osc.frequency = 110 * (i+1);
 					mixer.appendChild(osc);
 				}
+
+                var filter = document.createElement('audio-filter');
+                chain.appendChild(filter);
+
 			},
 			inserted: function() {
 				console.log('inserted synth');
@@ -45,8 +52,8 @@
 				console.log('the synth has', this.oscillators.length, 'oscillators');
 
 			},
-			// TODO note = -> con las notas y las octavas, tracatra
-			start: function(when) {
+			
+            start: function(when) {
 				// clumsy attempt at not saturating the output
 				var oscGain = this.oscillators.length > 0 ? 1.0 / this.oscillators.length : 1.0;
 				this.oscillators.forEach(function(osc) {
