@@ -10,8 +10,9 @@ function register() {
 			created: function() {
 				this.innerHTML = 'OSC<br />' + 
 					'<label><select class="type"></select> type</label><br />' +
-					'<label><input type="number" min="0" max="24000" /> Hz</label><br />' +
-					'<label><span></span></label>';
+					//'<label><input type="number" min="0" max="24000" /> Hz</label><br />' +
+					'<label class="frequency"><input type="range" min="1" max="12000" step="0.5" /><span></span> Hz</label><br />' +
+					'<label class="note"><span></span></label>';
 
 				
 				var self = this;
@@ -29,14 +30,15 @@ function register() {
 					self.typeSelect.appendChild(option);
 				});
 
-				// TODO maybe display below the note for that frequency too
-				this.frequencyInput = this.querySelector('input[type=number]');
-				this.noteSpan = this.querySelector('span');
-				
+				this.frequencyInput = this.querySelector('.frequency input');
+				this.frequencySpan = this.querySelector('.frequency span');
+				this.noteSpan = this.querySelector('.note span');
 
 				this.frequencyInput.addEventListener('change', function() {
 					var value = parseFloat(this.value);
-					self.oscillator.frequency = value;
+					//self.oscillator.frequency = value;
+                    //self.frequencySpan.innerHTML = value;
+                    self.frequency = value;
 				}, false);
 
 			}
@@ -70,13 +72,14 @@ function register() {
 						this.oscillator.frequency = v;
 					}
 					this.frequencyInput.value = v;
-                    console.log('set', v);
-					this.noteSpan.innerHTML = MIDIUtils.noteNumberToName(MIDIUtils.frequencyToNoteNumber(v));
-				},
+                    this.frequencySpan.innerHTML = Math.round(v);
+
+                    var note = MIDIUtils.noteNumberToName(MIDIUtils.frequencyToNoteNumber(v));
+					this.noteSpan.innerHTML = note !== undefined ? note : "";
+                },
 			},
 			type: {
 				set: function(v) {
-					console.log('set type', v);
 					if(this.oscillator) {
 						this.oscillator.type = v;
 					}
