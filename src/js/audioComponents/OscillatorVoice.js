@@ -44,7 +44,7 @@ function OscillatorVoice(context) {
 
 	function setType(v) {
 
-		frequency = v;
+		type = v;
 		if(internalOscillator !== null) {
 			internalOscillator.type = v;
 		}
