@@ -39,6 +39,16 @@ A `dist` folder is provided with `AudioTags.bundle.css` and `AudioTags.bundle.js
 </html>
 ````
 
+## How to build
+
+* clone the repo
+* you need node installed in your system and `browserify` as global (`npm install -g browserify`)
+* cd to the folder where you cloned the project, then just run `build.sh`
+
+Hopefully magic will happen.
+
+As long as you're using something like Bash. I don't think it'll work in Windows but I'm happy to be proved wrong.
+
 ## What is missing
 
 * When nodes are inserted or removed after initial page load.
