@@ -7,7 +7,7 @@
 	</head>
 	<body>
 
-		<p>A chain with an oscillator, a filter, and an oscilloscope should be created and displayed, and the oscillator start playing while the oscilloscope and the vumeter display the output visually. Changing the filter parameters alters the output sound.</p>
+		<p>A chain with an oscillator, a filter, and an oscilloscope should be created and displayed, and the oscillator start playing while the oscilloscope displays the output visually. Changing the filter parameters alters the output sound.</p>
 
 		<audio-context>
 			<audio-chain>
@@ -22,7 +22,8 @@
 			require('AudioTags').register();
 
 			window.addEventListener('DOMComponentsLoaded', function() {
-
+				
+				document.querySelector('audio-chain').output.gain.value = 0.05;
 				document.querySelector('audio-oscillator').start(0);
 
 			}, false);

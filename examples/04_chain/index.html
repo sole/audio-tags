@@ -21,13 +21,14 @@
 			require('AudioTags').register();
 
 			window.addEventListener('DOMComponentsLoaded', function() {
-
+                
+				document.querySelector('audio-chain').output.gain.value = 0.05;
 				document.querySelector('audio-oscillator').start(0);
 
 			}, false);
 		</script>
 
-        </body>
+                </body>
 </html>
 
 

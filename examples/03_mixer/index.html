@@ -21,7 +21,9 @@
 			require('AudioTags').register();
 
 			window.addEventListener('DOMComponentsLoaded', function() {
-				
+        
+        document.querySelector('audio-mixer').output.gain.value = 0.05;
+
 				Array.prototype.slice.call(document.querySelectorAll('audio-oscillator'), 0).forEach(function(osc, index) {
 					osc.start(0);
 				});
