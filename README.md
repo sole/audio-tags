@@ -59,3 +59,8 @@ As long as you're using something like Bash. I don't think it'll work in Windows
 * Waveshaper is pretty unfinished and many other things are not quite done.
 * This is a prototype and I'm officially inviting you to fork this repository and play with the code. Maybe even send a PR. Let's discuss!
 
+## Used libraries
+
+I'm using
+* [AudioContextMonkeyPatch](https://github.com/cwilso/AudioContext-MonkeyPatch)
+* [x-tag](http://x-tags.org/)
