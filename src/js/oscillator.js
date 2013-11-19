@@ -74,7 +74,7 @@ function register() {
 
 					var note = MIDIUtils.noteNumberToName(MIDIUtils.frequencyToNoteNumber(v));
 					this.noteSpan.innerHTML = note !== undefined ? note : "";
-                },
+				},
 			},
 			type: {
 				set: function(v) {
