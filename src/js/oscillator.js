@@ -36,9 +36,7 @@ function register() {
 
 				this.frequencyInput.addEventListener('change', function() {
 					var value = parseFloat(this.value);
-					//self.oscillator.frequency = value;
-                    //self.frequencySpan.innerHTML = value;
-                    self.frequency = value;
+					self.frequency = value;
 				}, false);
 
 			}
@@ -72,9 +70,9 @@ function register() {
 						this.oscillator.frequency = v;
 					}
 					this.frequencyInput.value = v;
-                    this.frequencySpan.innerHTML = Math.round(v);
+					this.frequencySpan.innerHTML = Math.round(v);
 
-                    var note = MIDIUtils.noteNumberToName(MIDIUtils.frequencyToNoteNumber(v));
+					var note = MIDIUtils.noteNumberToName(MIDIUtils.frequencyToNoteNumber(v));
 					this.noteSpan.innerHTML = note !== undefined ? note : "";
                 },
 			},
