@@ -10,6 +10,7 @@
 	xtag.register('mini-synth', {
 
 		lifecycle: {
+
 			created: function() {
 				console.log('created mini synth');
 
@@ -21,8 +22,8 @@
 						'<audio-oscillator frequency="440"></audio-oscillator>' + 
 					'</audio-mixer>';*/
 
-                var chain = document.createElement('audio-chain');
-                this.appendChild(chain);
+				var chain = document.createElement('audio-chain');
+				this.appendChild(chain);
 				
 				var mixer = document.createElement('audio-mixer');
 				chain.appendChild(mixer);
@@ -33,25 +34,23 @@
 					mixer.appendChild(osc);
 				}
 
-                var filter = document.createElement('audio-filter');
-                filter.setAttribute('type', 'allpass');
-                chain.appendChild(filter);
-
+				var filter = document.createElement('audio-filter');
+				filter.setAttribute('type', 'allpass');
+				chain.appendChild(filter);
 			},
+			
 			inserted: function() {
 				console.log('inserted synth');
 			}
+
 		},
 
 		methods: {
 
 			init: function(audioContext) {
-
 				TagPrototype.call(this, audioContext);
 				this.initChildren(audioContext);
-
 				this.oscillators = Array.prototype.slice.call(this.querySelectorAll('audio-oscillator'));
-
 			},
 			
             start: function(when) {
@@ -62,12 +61,13 @@
 					osc.start(when);
 				});
 			},
+			
 			stop: function(when) {
 				this.oscillators.forEach(function(osc) {
 					osc.stop(when);
 				});
-
 			},
+			
 			noteOn: function(noteNumber) {
 				this.oscillators.forEach(function(osc, index) {
 					var oscNoteNumber = noteNumber + 12 * index;
@@ -75,6 +75,7 @@
 					osc.frequency = frequency;
 				});
 			},
+
 			noteOff: function() {
 				this.stop();
 			}
