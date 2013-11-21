@@ -28,7 +28,7 @@
 				var mixer = document.createElement('audio-mixer');
 				chain.appendChild(mixer);
 
-                for(var i = 0; i < 2; i++) {
+				for(var i = 0; i < 2; i++) {
 					var osc = document.createElement('audio-oscillator');
 					osc.frequency = 110 * (i+1);
 					mixer.appendChild(osc);
@@ -53,7 +53,7 @@
 				this.oscillators = Array.prototype.slice.call(this.querySelectorAll('audio-oscillator'));
 			},
 			
-            start: function(when) {
+			start: function(when) {
 				// clumsy attempt at not saturating the output
 				var oscGain = this.oscillators.length > 0 ? 1.0 / this.oscillators.length : 1.0;
 				this.oscillators.forEach(function(osc) {
