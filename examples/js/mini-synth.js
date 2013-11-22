@@ -16,13 +16,18 @@
 
 				// TODO prepare test case and report this as a bug or as a question
 
-				/*this.innerHTML = 
-					'<audio-mixer>' +
-						'<audio-oscillator frequency="220"></audio-oscillator>' + 
-						'<audio-oscillator frequency="440"></audio-oscillator>' + 
-					'</audio-mixer>';*/
+				xtag.innerHTML(this, 
+					'<audio-chain>' +
+						'<audio-mixer>' +
+							'<audio-oscillator frequency="220"></audio-oscillator>' + 
+							'<audio-oscillator frequency="440"></audio-oscillator>' + 
+						'</audio-mixer>' +
+						'<audio-filter type="allpass"></audio-filter>' +
+					'</audio-chain>');
 
-				var chain = document.createElement('audio-chain');
+				
+
+				/*var chain = document.createElement('audio-chain');
 				this.appendChild(chain);
 				
 				var mixer = document.createElement('audio-mixer');
@@ -36,7 +41,7 @@
 
 				var filter = document.createElement('audio-filter');
 				filter.setAttribute('type', 'allpass');
-				chain.appendChild(filter);
+				chain.appendChild(filter);*/
 			},
 			
 			inserted: function() {
