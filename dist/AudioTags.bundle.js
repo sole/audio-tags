@@ -3465,8 +3465,8 @@ TWEEN.Interpolation = {
 
 module.exports=TWEEN;
 },{}],"AudioTags":[function(require,module,exports){
-module.exports=require('0xpFi4');
-},{}],"0xpFi4":[function(require,module,exports){
+module.exports=require('22U8we');
+},{}],"22U8we":[function(require,module,exports){
 var TagPrototype = require('./tagPrototype');
 var MIDIUtils = require('midiutils');
 
@@ -3498,7 +3498,7 @@ module.exports = {
 
 var TagPrototype = function(audioContext) {
 
-    this.classList.add('audio');
+	this.classList.add('audio');
 
 	// input: splitter?
 	this.input = audioContext.createGain();
@@ -3997,24 +3997,23 @@ function dispatchNoteOff( keyboard ) {
 
 function register() {
 
-    xtag.register('audio-keyboard', {
-        lifecycle: {
-            created: function() {
-                // TODO read attributes
+	xtag.register('audio-keyboard', {
+		lifecycle: {
+			created: function() {
 				var numOctaves = this.getAttribute('octaves');
-                this.numOctaves = numOctaves !== null ? Math.min(2, parseInt(numOctaves, 10)) : 1;
-                this.keyClass = 'key';
-                this.keyBlackClass = 'key black';
-                this.keyboardLayout = 'ZSXDCVGBHNJMQ2W3ER5T6Y7U'.split('');
-                this.blacks = [ false, true, false, true, false, false, true, false, true, false, true, false ];
-                
-                this.keys = [];
+				this.numOctaves = numOctaves !== null ? Math.min(2, parseInt(numOctaves, 10)) : 1;
+				this.keyClass = 'key';
+				this.keyBlackClass = 'key black';
+				this.keyboardLayout = 'ZSXDCVGBHNJMQ2W3ER5T6Y7U'.split('');
+				this.blacks = [ false, true, false, true, false, false, true, false, true, false, true, false ];
 
-                initLayout(this);
+				this.keys = [];
 
-            },
-        }
-    });
+				initLayout(this);
+
+			},
+		}
+	});
 
 }
 
@@ -4087,9 +4086,7 @@ function register() {
 
 				this.frequencyInput.addEventListener('change', function() {
 					var value = parseFloat(this.value);
-					//self.oscillator.frequency = value;
-                    //self.frequencySpan.innerHTML = value;
-                    self.frequency = value;
+					self.frequency = value;
 				}, false);
 
 			}
@@ -4123,11 +4120,11 @@ function register() {
 						this.oscillator.frequency = v;
 					}
 					this.frequencyInput.value = v;
-                    this.frequencySpan.innerHTML = Math.round(v);
+					this.frequencySpan.innerHTML = Math.round(v);
 
-                    var note = MIDIUtils.noteNumberToName(MIDIUtils.frequencyToNoteNumber(v));
+					var note = MIDIUtils.noteNumberToName(MIDIUtils.frequencyToNoteNumber(v));
 					this.noteSpan.innerHTML = note !== undefined ? note : "";
-                },
+				},
 			},
 			type: {
 				set: function(v) {

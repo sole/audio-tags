@@ -24,3 +24,21 @@ h1 span {
 	padding: 0.5rem;
 	line-height: inherit;
 }
+
+.audio {
+	padding: 0.5rem;
+}
+
+audio-oscillator {
+	display: inline-block;
+}
+
+audio-mixer > * {
+	display: block;
+}
+
+audio-keyboard {
+	margin: 1rem 0;
+}
+
+

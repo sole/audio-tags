@@ -144,24 +144,23 @@ function dispatchNoteOff( keyboard ) {
 
 function register() {
 
-    xtag.register('audio-keyboard', {
-        lifecycle: {
-            created: function() {
-                // TODO read attributes
+	xtag.register('audio-keyboard', {
+		lifecycle: {
+			created: function() {
 				var numOctaves = this.getAttribute('octaves');
-                this.numOctaves = numOctaves !== null ? Math.min(2, parseInt(numOctaves, 10)) : 1;
-                this.keyClass = 'key';
-                this.keyBlackClass = 'key black';
-                this.keyboardLayout = 'ZSXDCVGBHNJMQ2W3ER5T6Y7U'.split('');
-                this.blacks = [ false, true, false, true, false, false, true, false, true, false, true, false ];
-                
-                this.keys = [];
+				this.numOctaves = numOctaves !== null ? Math.min(2, parseInt(numOctaves, 10)) : 1;
+				this.keyClass = 'key';
+				this.keyBlackClass = 'key black';
+				this.keyboardLayout = 'ZSXDCVGBHNJMQ2W3ER5T6Y7U'.split('');
+				this.blacks = [ false, true, false, true, false, false, true, false, true, false, true, false ];
 
-                initLayout(this);
+				this.keys = [];
 
-            },
-        }
-    });
+				initLayout(this);
+
+			},
+		}
+	});
 
 }
 
