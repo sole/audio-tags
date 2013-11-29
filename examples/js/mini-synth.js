@@ -14,8 +14,6 @@
 			created: function() {
 				console.log('created mini synth');
 
-				// TODO prepare test case and report this as a bug or as a question
-
 				xtag.innerHTML(this, 
 					'<audio-chain>' +
 						'<audio-mixer>' +
@@ -25,23 +23,6 @@
 						'<audio-filter type="allpass"></audio-filter>' +
 					'</audio-chain>');
 
-				
-
-				/*var chain = document.createElement('audio-chain');
-				this.appendChild(chain);
-				
-				var mixer = document.createElement('audio-mixer');
-				chain.appendChild(mixer);
-
-				for(var i = 0; i < 2; i++) {
-					var osc = document.createElement('audio-oscillator');
-					osc.frequency = 110 * (i+1);
-					mixer.appendChild(osc);
-				}
-
-				var filter = document.createElement('audio-filter');
-				filter.setAttribute('type', 'allpass');
-				chain.appendChild(filter);*/
 			},
 			
 			inserted: function() {
