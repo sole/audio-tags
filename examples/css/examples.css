@@ -1,0 +1,26 @@
+body {
+	margin: 0;
+	padding: 1rem;
+	color: #222;
+	background: #fff;
+	font-family: Helvetica, Arial, sans-serif;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+h1 {
+	margin: 0 0 1rem 0;
+	font-weight: normal;
+	font-size: 2.5rem;
+	padding: 0.5rem 0;
+	background: #efefef;
+}
+
+h1 span {
+	color: #fff;
+	background: #EC9536;
+	padding: 0.5rem;
+	line-height: inherit;
+}

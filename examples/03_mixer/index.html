@@ -1,12 +1,14 @@
 <!doctype html>
 <html>
-        <head>
-                <meta charset="utf8">
-                <title>Mixer</title>
-                <link href="../../dist/AudioTags.bundle.css" rel="stylesheet" media="all" />
-        </head>
+	<head>
+		<meta charset="utf8">
+		<title>Mixer</title>
+		<link href="../../dist/AudioTags.bundle.css" rel="stylesheet" media="all" />
+		<link href="../css/examples.css" rel="stylesheet" media="all" />
+	</head>
 	<body>
-
+		
+		<h1><span>03</span> Mixer</h1>
 		<p>A mixer with oscillators should be created and displayed, and the oscillators start playing.</p>
 
 		<audio-context>
@@ -22,7 +24,7 @@
 
 			window.addEventListener('DOMComponentsLoaded', function() {
         
-        document.querySelector('audio-mixer').output.gain.value = 0.05;
+				document.querySelector('audio-mixer').output.gain.value = 0.05;
 
 				Array.prototype.slice.call(document.querySelectorAll('audio-oscillator'), 0).forEach(function(osc, index) {
 					osc.start(0);
@@ -31,7 +33,7 @@
 			}, false);
 		</script>
 
-        </body>
+	</body>
 </html>
 
 
