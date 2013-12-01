@@ -69,6 +69,7 @@ audio-keyboard .key {
 	-webkit-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
+	transition: all 0.25s linear;
 }
 
 audio-keyboard .key + .key {
@@ -87,8 +88,20 @@ audio-keyboard .key.black {
 	top: -3rem;
 	z-index: 2;
 	right: -1rem;
+	border: 1px solid black;
 }
 
+audio-keyboard .key + .key.black {
+	xmargin-right: -1rem;
+}
+
+audio-keyboard .key:hover {
+	background: #f00;
+}
+
+audio-keyboard .key:active, audio-keyboard .key.active {
+	background: #ff0;
+}
 audio-mixer {
 	display: inline-block;
 	xbackground: #ccc;

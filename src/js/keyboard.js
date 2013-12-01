@@ -147,24 +147,32 @@ function register() {
 	xtag.register('audio-keyboard', {
 		lifecycle: {
 			created: function() {
-				var numOctaves = this.getAttribute('octaves');
-				this.numOctaves = numOctaves !== null ? Math.min(2, parseInt(numOctaves, 10)) : 1;
+				
 				this.keyClass = 'key';
 				this.keyBlackClass = 'key black';
 				this.keyboardLayout = 'ZSXDCVGBHNJMQ2W3ER5T6Y7U'.split('');
 				this.blacks = [ false, true, false, true, false, false, true, false, true, false, true, false ];
 
-				this.keys = [];
-
-				initLayout(this);
+				this.rebuildKeyboard();
 
 			},
+		},
+		methods: {
+			rebuildKeyboard: function() {
+				console.log('rebuild', this);
+				this.keys = [];
+				this.numOctaves = this.getAttribute('octaves');
+				initLayout(this);
+			}
 		},
 		accessors: {
 			octaves: {
 				attribute: {},
 				set: function(value) {
-					this.setAttribute('octaves', value);
+					console.log('set octaves', value);
+					var cappedValue = value !== null ? Math.min(2, parseInt(value, 10)) : 1;
+					this.setAttribute('octaves', cappedValue);
+					this.rebuildKeyboard();
 				}
 			}
 		}

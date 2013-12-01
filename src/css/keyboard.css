@@ -40,6 +40,10 @@ audio-keyboard .key.black {
 	border: 1px solid black;
 }
 
+audio-keyboard .key + .key.black {
+	xmargin-right: -1rem;
+}
+
 audio-keyboard .key:hover {
 	background: #f00;
 }
