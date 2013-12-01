@@ -159,6 +159,14 @@ function register() {
 				initLayout(this);
 
 			},
+		},
+		accessors: {
+			octaves: {
+				attribute: {},
+				set: function(value) {
+					this.setAttribute('octaves', value);
+				}
+			}
 		}
 	});
 
