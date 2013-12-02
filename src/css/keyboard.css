@@ -11,6 +11,7 @@ audio-keyboard {
 	position: relative;
 	width: auto;
 	font-size: 1.25rem;
+	outline: none;
 }
 
 
