@@ -3854,11 +3854,16 @@ module.exports = {
 
 function initLayout(kb) {
 
+	var blacksDiv;
 	var numBlacks = kb.blacks.length;
 
 	kb.innerHTML = '';
 	kb.classList.add('keyboard');
 	
+	blacksDiv = document.createElement('div');
+	kb.appendChild(blacksDiv);
+	blacksDiv.className = 'blacks';
+
 	for(var i = 0; i < kb.numOctaves; i++) {
 
 		for(var j = 0; j < numBlacks; j++) {
@@ -3877,7 +3882,15 @@ function initLayout(kb) {
 
 			kb.keys.push( keyDiv );
 
-			kb.appendChild( keyDiv );
+			if(isBlack) {
+				blacksDiv.appendChild( keyDiv );
+
+				if(j >= 2 && !kb.blacks[j - 1] && !kb.blacks[j - 2] || (j === 1 && i > 0) ) {
+					keyDiv.classList.add('prevwhite');
+				}
+			} else {
+				kb.appendChild( keyDiv );
+			}
 
 		}
 	}
@@ -4004,6 +4017,7 @@ function register() {
 				this.keyClass = 'key';
 				this.keyBlackClass = 'key black';
 				this.keyboardLayout = 'ZSXDCVGBHNJMQ2W3ER5T6Y7U'.split('');
+				// TODO rename this variable to something more descriptive-it's confusing
 				this.blacks = [ false, true, false, true, false, false, true, false, true, false, true, false ];
 
 				this.rebuildKeyboard();

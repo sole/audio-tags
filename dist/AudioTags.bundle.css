@@ -49,6 +49,13 @@ audio-context > * {
 audio-filter {
 	/*display: inline-block;*/
 }
+audio-keyboard * {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+ }
+
+
 audio-keyboard {
 	display: inline-block;
 	border: 1px solid #333;
@@ -57,11 +64,12 @@ audio-keyboard {
 	font-size: 1.25rem;
 }
 
+
 audio-keyboard .key {
 	position: relative;
 	display: inline-block;
 	padding: 4rem 0.25rem 1rem 0.25rem;
-	width: 2rem;
+	width: 3rem;
 	text-align: center;
 	cursor: pointer;
 	-moz-user-select: -moz-none;
@@ -69,38 +77,61 @@ audio-keyboard .key {
 	-webkit-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
-	transition: all 0.25s linear;
+	transition: all 0.2s ease-in;
+	background: #efefef;
+	z-index: 0;
 }
 
 audio-keyboard .key + .key {
 	border-left: 1px solid black;
 }
 
+audio-keyboard .key.black + .key {
+	border-left: 0px;
+}
+
+
+audio-keyboard .blacks {
+	position: absolute;
+	top: 0;
+	left: 2rem;
+	z-index: 2;
+}
+
+audio-keyboard .key.black.prevwhite {
+	margin-left: 3rem;
+}
+
 audio-keyboard .key.black {
 	color: #fff;
 	background-color: #000;
-	margin-left: -1.5rem;
-	margin-right: -0.5rem;
+	margin-right: 1rem;
 	padding-top: 1rem;
 	padding-right: 0.25rem;
 	padding-left: 0.25rem;
 	width: 2rem;
-	top: -3rem;
-	z-index: 2;
-	right: -1rem;
-	border: 1px solid black;
-}
-
-audio-keyboard .key + .key.black {
-	xmargin-right: -1rem;
+	box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.4);
 }
 
 audio-keyboard .key:hover {
-	background: #f00;
+	background: #fff;
+	box-shadow: 0px 0px 15px rgba(255, 255, 0, 0.9);
+	z-index: 1;
+}
+
+audio-keyboard .key.black:hover {
+	background: #000;
 }
 
 audio-keyboard .key:active, audio-keyboard .key.active {
-	background: #ff0;
+	background: #fff;
+	box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.4);
+}
+
+audio-keyboard .key.black:active, audio-keyboard .key.black.active {
+	box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.9);
+	background: #000;
+	color: #ff0;
 }
 audio-mixer {
 	display: inline-block;
