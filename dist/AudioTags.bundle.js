@@ -3882,7 +3882,7 @@ function initLayout(kb) {
 		}
 	}
 
-	kb.tabIndex = 1; // TODO what if there's more than one kb
+	kb.tabIndex = 1; // TODO what if there's more than one keyboard?
 	kb.addEventListener('keydown', makeCallback(kb, onKeyDown), false);
 	kb.addEventListener('keyup', makeCallback(kb, onKeyUp), false);
 
@@ -4012,7 +4012,6 @@ function register() {
 		},
 		methods: {
 			rebuildKeyboard: function() {
-				console.log('rebuild', this);
 				this.keys = [];
 				this.numOctaves = this.getAttribute('octaves');
 				initLayout(this);
@@ -4022,7 +4021,6 @@ function register() {
 			octaves: {
 				attribute: {},
 				set: function(value) {
-					console.log('set octaves', value);
 					var cappedValue = value !== null ? Math.min(2, parseInt(value, 10)) : 1;
 					this.setAttribute('octaves', cappedValue);
 					this.rebuildKeyboard();
