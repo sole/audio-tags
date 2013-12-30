@@ -31,9 +31,13 @@ A `dist` folder is provided with `AudioTags.bundle.css` and `AudioTags.bundle.js
 		<!--Audio Tags here-->
 		<script src="../../dist/AudioTags.bundle.js" type="text/javascript"></script>
 		<script>
+
+			require('AudioTags').register();
+			
 			window.addEventListener('DOMComponentsLoaded', function() {
-				require('AudioTags').register();
+				// Do your stuff here
 			}, false);
+
 		</script>
 	</body>
 </html>
