@@ -3,7 +3,7 @@
 cat src/css/*.css > dist/AudioTags.bundle.css
 
 # Build JS bundle using browserify
-# the :AudioTag is for specifying the name the module will "expose" externally
+# the :AudioTags is for specifying the name the module will "expose" externally
 browserify -r ./src/js/AudioTags:AudioTags > dist/AudioTags.dist.js
 
 # Concat a few things together (uurgh)
