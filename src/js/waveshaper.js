@@ -1,6 +1,8 @@
 
-var TagPrototype = require('./TagPrototype');
 var TWEEN = require('tween.js');
+var TagPrototype = require('./TagPrototype');
+var canvasPlot = require('./canvasPlot');
+
 
 var graphs_list = [
 	[ 'Linear.None' ],
@@ -16,6 +18,9 @@ var graphs_list = [
 	[ 'Bounce.In', 'Bounce.Out', 'Bounce.InOut' ]
 ];
 
+var canvasWidth = 200;
+var canvasHeight = 100;
+
 function register() {
 
 	xtag.register('audio-waveshaper', {
@@ -25,14 +30,20 @@ function register() {
 				
 				var self = this;
 
-				/*this.innerHTML = 'FILTER<br /><label>frequency<input class="frequency" type="range" min="10" max="24000" /></label>';
-				this.frequencyInput = this.querySelector('.frequency');
-				this.frequencyInput.addEventListener('change', function(e) {
-					self.frequency = parseInt(this.value, 10);
-				}, false);*/
+				this.valuesArray = [-1, 0, 1];
 
-				this.innerHTML = 'WAVESHAPER';
-				// TODO maybe use a canvas and display the current curve
+				this.innerHTML = '';
+
+				var canvas = document.createElement('canvas');
+				canvas.width = canvasWidth;
+				canvas.height = canvasHeight;
+
+				this.canvas = canvas;
+
+				this.appendChild(canvas);
+
+
+				// TODO provide option to change curve - like a drop down kinda thing?
 
 			}
 		},
@@ -59,6 +70,8 @@ function register() {
 
 				waveshaper.curve = curve;
 
+				//this.value = curve;
+
 				// var parts = title.split('.'),
 				// tweenEasing = TWEEN.Easing[parts[0]][parts[1]],
 
@@ -66,7 +79,49 @@ function register() {
 		},
 
 		accessors: {
-			// TODO function?
+			// TODO function - from the tween list, and it will be rendered
+			// TODO function resolution, default 512?
+
+			// Can be a comma separated list of values or an array
+			// Examples: this.value = '1,2,3' or this.value = '-0.5,1,0';
+			// also: this.value = [1,2,3,4]
+			// the comma separated version should be most handy when declaring the component in html, with an attribute
+
+			// If values are out of the -1, 1 range they will be capped
+			value: {
+				set: function(v) {
+
+					var vType = typeof v;
+					var curve;
+
+					if(vType === 'string') {
+						curve = v.split(',');
+					} else { // TODO might want to do some more validation such as .length property...?
+						curve = v;
+					}
+
+					var curveF32 = new Float32Array(curve.length);
+
+					for(var i = 0; i < curve.length; i++) {
+						var c = curve[i] * 1;
+						if(c <= -1) {
+							c = -1;
+						} else if(c >= 1) {
+							c = 1;
+						}
+						curveF32[i] = c;
+					}
+
+					this.waveshaper.curve = curveF32;
+
+					canvasPlot.graph(this.canvas, curve);
+
+				},
+
+				get: function() {
+					return this.waveshaper.curve;
+				}
+			}
 		}
 
 	});

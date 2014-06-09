@@ -4,8 +4,6 @@ var canvasPlot = require('./canvasPlot');
 
 var canvasWidth = 200;
 var canvasHeight = 100;
-//var canvasHalfWidth = canvasWidth * 0.5;
-//var canvasHalfHeight = canvasHeight * 0.5;
 
 function register() {
 	
