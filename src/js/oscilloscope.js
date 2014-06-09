@@ -1,14 +1,14 @@
 
 var TagPrototype = require('./TagPrototype');
+var canvasPlot = require('./canvasPlot');
 
 var canvasWidth = 200;
 var canvasHeight = 100;
-var canvasHalfWidth = canvasWidth * 0.5;
-var canvasHalfHeight = canvasHeight * 0.5;
-var numSlices = 32;
-var inverseNumSlices = 1.0 / numSlices;
+//var canvasHalfWidth = canvasWidth * 0.5;
+//var canvasHalfHeight = canvasHeight * 0.5;
 
 function register() {
+	
 	xtag.register('audio-oscilloscope', {
 
 		lifecycle: {
@@ -18,6 +18,7 @@ function register() {
 				canvas.height = canvasHeight;
 				var ctx = canvas.getContext('2d');
 
+				this.canvas = canvas;
 				this.canvasContext = ctx;
 
 				this.appendChild(canvas);
@@ -32,11 +33,12 @@ function register() {
 				analyser.fftSize = 2048;
 				var bufferLength = analyser.frequencyBinCount;
 				var timeDomainArray = new Uint8Array(bufferLength);
+				var floatTimes = new Float32Array(bufferLength);
 				
 				this.input.connect(analyser);
 				analyser.connect(this.output);
 
-				var ctx = this.canvasContext;
+				var canvas = this.canvas;
 				
 				update();
 
@@ -46,35 +48,12 @@ function register() {
 		
 					analyser.getByteTimeDomainData(timeDomainArray);
 
-					ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
-					ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-
-					ctx.lineWidth = 1;
-					ctx.strokeStyle = 'rgb(0, 255, 0)';
-
-					ctx.beginPath();
-
-					var sliceWidth = canvasWidth * 1.0 / bufferLength;
-					var x = 0;
-
-
+					// Map the 0..255 unsigned byte values to -1..1 for the canvasPlot.graph call
 					for(var i = 0; i < bufferLength; i++) {
-
-						var v = timeDomainArray[i] / 128.0;
-						var y = v * canvasHalfHeight;
-
-						if(i === 0) {
-							ctx.moveTo(x, y);
-						} else {
-							ctx.lineTo(x, y);
-						}
-
-						x += sliceWidth;
+						floatTimes[i] = timeDomainArray[i] / 128 - 1;
 					}
 
-					ctx.lineTo(canvasWidth, canvasHalfHeight);
-
-					ctx.stroke();
+					canvasPlot.graph(canvas, floatTimes);
 
 				}
 
@@ -82,7 +61,7 @@ function register() {
 		},
 
 		accessors: {
-			// TODO maybe resolution?
+			// TODO maybe resolution? (fftSize)
 		}
 	});
 }

@@ -3469,8 +3469,8 @@ TWEEN.Interpolation = {
 
 module.exports=TWEEN;
 },{}],"AudioTags":[function(require,module,exports){
-module.exports=require('22U8we');
-},{}],"22U8we":[function(require,module,exports){
+module.exports=require('pYUe7i');
+},{}],"pYUe7i":[function(require,module,exports){
 var TagPrototype = require('./tagPrototype');
 var MIDIUtils = require('midiutils');
 
@@ -3498,7 +3498,7 @@ module.exports = {
     MIDIUtils: MIDIUtils
 };
 
-},{"./chain":7,"./context":8,"./filter":9,"./keyboard":10,"./mixer":11,"./oscillator":12,"./oscilloscope":13,"./tagPrototype":14,"./vumeter":15,"./waveshaper":16,"midiutils":1}],5:[function(require,module,exports){
+},{"./chain":8,"./context":9,"./filter":10,"./keyboard":11,"./mixer":12,"./oscillator":13,"./oscilloscope":14,"./tagPrototype":15,"./vumeter":16,"./waveshaper":17,"midiutils":1}],5:[function(require,module,exports){
 
 var TagPrototype = function(audioContext) {
 
@@ -3659,6 +3659,57 @@ module.exports = OscillatorVoice;
 
 
 },{}],7:[function(require,module,exports){
+// this module contains code for drawing arrays into canvas
+
+// Draws a simple line-based graph.
+// Buffer values are expected to be -1..1
+function graph(canvas, buffer) {
+	
+	var ctx = canvas.getContext('2d');
+	var canvasWidth = canvas.width;
+	var canvasHeight = canvas.height;
+	var canvasHalfHeight = canvasHeight * 0.5;
+	var bufferLength = buffer.length;
+
+	ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+	ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+	ctx.lineWidth = 1;
+	ctx.strokeStyle = 'rgb(0, 255, 0)';
+
+	ctx.beginPath();
+
+	var sliceWidth = canvasWidth * 1.0 / bufferLength;
+	var x = 0;
+
+
+	for(var i = 0; i < bufferLength; i++) {
+
+		var v = 1 - buffer[i]; // timeDomainArray[i] / 128.0;
+		var y = v * canvasHalfHeight;
+
+		if(i === 0) {
+			ctx.moveTo(x, y);
+		} else {
+			ctx.lineTo(x, y);
+		}
+
+		x += sliceWidth;
+	}
+
+	ctx.lineTo(canvasWidth, canvasHalfHeight);
+
+	ctx.stroke();
+
+}
+
+var canvasPlot = {
+	graph: graph
+};
+
+module.exports = canvasPlot;
+
+},{}],8:[function(require,module,exports){
 
 var TagPrototype = require('./TagPrototype');
 
@@ -3708,7 +3759,7 @@ module.exports = {
 };
 
 
-},{"./TagPrototype":5}],8:[function(require,module,exports){
+},{"./TagPrototype":5}],9:[function(require,module,exports){
 function register() {
 	xtag.register('audio-context', {
 		lifecycle: {
@@ -3738,7 +3789,7 @@ module.exports = {
 	register: register
 };
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 
 var TagPrototype = require('./TagPrototype');
 
@@ -3854,7 +3905,7 @@ module.exports = {
 
 
 
-},{"./TagPrototype":5}],10:[function(require,module,exports){
+},{"./TagPrototype":5}],11:[function(require,module,exports){
 
 function initLayout(kb) {
 
@@ -4053,7 +4104,7 @@ module.exports = {
 	register: register
 };
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 
 var TagPrototype = require('./TagPrototype');
 
@@ -4079,7 +4130,7 @@ module.exports = {
 	register: register
 };
 
-},{"./TagPrototype":5}],12:[function(require,module,exports){
+},{"./TagPrototype":5}],13:[function(require,module,exports){
 
 var TagPrototype = require('./TagPrototype');
 var OscillatorVoice = require('./audioComponents/OscillatorVoice');
@@ -4177,18 +4228,18 @@ module.exports = {
 	register: register
 };
 
-},{"./TagPrototype":5,"./audioComponents/OscillatorVoice":6,"midiutils":1}],13:[function(require,module,exports){
+},{"./TagPrototype":5,"./audioComponents/OscillatorVoice":6,"midiutils":1}],14:[function(require,module,exports){
 
 var TagPrototype = require('./TagPrototype');
+var canvasPlot = require('./canvasPlot');
 
 var canvasWidth = 200;
 var canvasHeight = 100;
-var canvasHalfWidth = canvasWidth * 0.5;
-var canvasHalfHeight = canvasHeight * 0.5;
-var numSlices = 32;
-var inverseNumSlices = 1.0 / numSlices;
+//var canvasHalfWidth = canvasWidth * 0.5;
+//var canvasHalfHeight = canvasHeight * 0.5;
 
 function register() {
+	
 	xtag.register('audio-oscilloscope', {
 
 		lifecycle: {
@@ -4198,6 +4249,7 @@ function register() {
 				canvas.height = canvasHeight;
 				var ctx = canvas.getContext('2d');
 
+				this.canvas = canvas;
 				this.canvasContext = ctx;
 
 				this.appendChild(canvas);
@@ -4212,11 +4264,12 @@ function register() {
 				analyser.fftSize = 2048;
 				var bufferLength = analyser.frequencyBinCount;
 				var timeDomainArray = new Uint8Array(bufferLength);
+				var floatTimes = new Float32Array(bufferLength);
 				
 				this.input.connect(analyser);
 				analyser.connect(this.output);
 
-				var ctx = this.canvasContext;
+				var canvas = this.canvas;
 				
 				update();
 
@@ -4226,35 +4279,12 @@ function register() {
 		
 					analyser.getByteTimeDomainData(timeDomainArray);
 
-					ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
-					ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-
-					ctx.lineWidth = 1;
-					ctx.strokeStyle = 'rgb(0, 255, 0)';
-
-					ctx.beginPath();
-
-					var sliceWidth = canvasWidth * 1.0 / bufferLength;
-					var x = 0;
-
-
+					// Map the 0..255 unsigned byte values to -1..1 for the canvasPlot.graph call
 					for(var i = 0; i < bufferLength; i++) {
-
-						var v = timeDomainArray[i] / 128.0;
-						var y = v * canvasHalfHeight;
-
-						if(i === 0) {
-							ctx.moveTo(x, y);
-						} else {
-							ctx.lineTo(x, y);
-						}
-
-						x += sliceWidth;
+						floatTimes[i] = timeDomainArray[i] / 128 - 1;
 					}
 
-					ctx.lineTo(canvasWidth, canvasHalfHeight);
-
-					ctx.stroke();
+					canvasPlot.graph(canvas, floatTimes);
 
 				}
 
@@ -4262,7 +4292,7 @@ function register() {
 		},
 
 		accessors: {
-			// TODO maybe resolution?
+			// TODO maybe resolution? (fftSize)
 		}
 	});
 }
@@ -4272,9 +4302,9 @@ module.exports = {
 };
 
 
-},{"./TagPrototype":5}],14:[function(require,module,exports){
+},{"./TagPrototype":5,"./canvasPlot":7}],15:[function(require,module,exports){
 module.exports=require(5)
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 
 var TagPrototype = require('./TagPrototype');
 
@@ -4379,7 +4409,7 @@ module.exports = {
 
 
 
-},{"./TagPrototype":5}],16:[function(require,module,exports){
+},{"./TagPrototype":5}],17:[function(require,module,exports){
 
 var TagPrototype = require('./TagPrototype');
 var TWEEN = require('tween.js');
@@ -4460,4 +4490,3 @@ module.exports = {
 
 
 },{"./TagPrototype":5,"tween.js":2}]},{},[])
-;
