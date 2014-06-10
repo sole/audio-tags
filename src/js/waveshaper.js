@@ -20,6 +20,7 @@ var graphs_list = [
 
 var canvasWidth = 200;
 var canvasHeight = 100;
+var resolution = 512;
 
 function register() {
 
@@ -29,8 +30,6 @@ function register() {
 			created: function() {
 				
 				var self = this;
-
-				this.valuesArray = [-1, 0, 1];
 
 				this.innerHTML = '';
 
@@ -43,7 +42,7 @@ function register() {
 				this.appendChild(canvas);
 
 
-				// TODO provide option to change curve - like a drop down kinda thing?
+				// TODO provide option to change curve - like a drop down kinda thing? if values have been set with the accessor, curve is 'custom'
 
 			}
 		},
@@ -58,7 +57,7 @@ function register() {
 				this.input.connect(waveshaper);
 				waveshaper.connect(this.output);
 
-				// TODO read which function to use from attribute. If null, use default
+				/*// TODO read which function to use from attribute. If null, use default
 				var curveLength = 512;
 				var curve = new Float32Array(curveLength);
 
@@ -70,17 +69,31 @@ function register() {
 
 				waveshaper.curve = curve;
 
-				//this.value = curve;
+				//this.value = curve;*/
 
 				// var parts = title.split('.'),
 				// tweenEasing = TWEEN.Easing[parts[0]][parts[1]],
+				//
+				//
+				this.valuesArray = [-1, 0, 1];
+				this.resolution = resolution;
+				
+				// Read attributes set in HTML, if any
+				this.initAttributes(['equation']);
+
+				// this.equation = graphs_list[0][0];
+
+
+				console.log('init');
+
+				
 
 			},
 		},
 
 		accessors: {
 			// TODO function - from the tween list, and it will be rendered
-			// TODO function resolution, default 512?
+			// TODO function resolution, default 512? - only used with function
 
 			// Can be a comma separated list of values or an array
 			// Examples: this.value = '1,2,3' or this.value = '-0.5,1,0';
@@ -90,7 +103,7 @@ function register() {
 			// If values are out of the -1, 1 range they will be capped
 			value: {
 				set: function(v) {
-
+console.log('value setter', v);
 					var vType = typeof v;
 					var curve;
 
@@ -112,7 +125,9 @@ function register() {
 						curveF32[i] = c;
 					}
 
-					this.waveshaper.curve = curveF32;
+					if(this.waveshaper !== null) {
+						this.waveshaper.curve = curveF32;
+					}
 
 					canvasPlot.graph(this.canvas, curve);
 
@@ -120,6 +135,29 @@ function register() {
 
 				get: function() {
 					return this.waveshaper.curve;
+				}
+			},
+			// Because function is a keyword ;)
+			equation: {
+				set: function(v) {
+					
+					var parts = v.split('.');
+					var equation = TWEEN.Easing[parts[0]][parts[1]];
+					var curveLength = this.resolution;
+					var curve = new Float32Array(curveLength);
+
+					for(var i = 0; i < curveLength; i++) {
+						var elapsed = i * 1.0 / curveLength;
+						// The tween equations return values from 0 to 1
+						// but we want them to be in -1..1
+						curve[i] = equation( elapsed ) * 2 - 1;
+					}
+
+					this.value = curve;
+
+				},
+				get: function() {
+					return this.equation;
 				}
 			}
 		}
