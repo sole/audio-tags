@@ -4430,7 +4430,8 @@ var graphs_list = [
 
 var canvasWidth = 200;
 var canvasHeight = 100;
-var resolution = 512;
+var defaultResolution = 512;
+var defaultEquation = TWEEN.Easing.Linear.None;
 
 function register() {
 
@@ -4467,38 +4468,33 @@ function register() {
 				this.input.connect(waveshaper);
 				waveshaper.connect(this.output);
 
-				/*// TODO read which function to use from attribute. If null, use default
-				var curveLength = 512;
-				var curve = new Float32Array(curveLength);
-
-				for(var i = 0; i < curveLength; i++) {
-					var v = i * 1.0 / curveLength;
-					//curve[i] = TWEEN.Easing.Linear.None( v );
-					curve[i] = TWEEN.Easing.Bounce.Out( v );
-				}
-
-				waveshaper.curve = curve;
-
-				//this.value = curve;*/
-
-				// var parts = title.split('.'),
-				// tweenEasing = TWEEN.Easing[parts[0]][parts[1]],
-				//
-				//
+				// TODO read which function to use from attribute. If null, use default
 				this.valuesArray = [-1, 0, 1];
-				this.resolution = resolution;
+				this.currentResolution = defaultResolution;
+				this.currentEquation = defaultEquation;
 				
 				// Read attributes set in HTML, if any
-				this.initAttributes(['equation']);
-
-				// this.equation = graphs_list[0][0];
-
+				this.initAttributes(['resolution', 'equation']);
 
 				console.log('init');
 
-				
-
 			},
+			renderEquation: function() {
+
+				var curveLength = this.currentResolution;
+				var curve = new Float32Array(curveLength);
+				var equation = this.equation;
+
+				for(var i = 0; i < curveLength; i++) {
+					var elapsed = i * 1.0 / curveLength;
+					// The tween equations return values from 0 to 1
+					// but we want them to be in -1..1
+					curve[i] = equation( elapsed ) * 2 - 1;
+				}
+
+				this.value = curve;
+
+			}
 		},
 
 		accessors: {
@@ -4513,7 +4509,7 @@ function register() {
 			// If values are out of the -1, 1 range they will be capped
 			value: {
 				set: function(v) {
-console.log('value setter', v);
+					
 					var vType = typeof v;
 					var curve;
 
@@ -4550,22 +4546,22 @@ console.log('value setter', v);
 			// Because function is a keyword ;)
 			equation: {
 				set: function(v) {
-					console.log('equation setter');
 					var parts = v.split('.');
 					var equation = TWEEN.Easing[parts[0]][parts[1]];
-					var curveLength = this.resolution;
-					var curve = new Float32Array(curveLength);
-
-					for(var i = 0; i < curveLength; i++) {
-						var elapsed = i * 1.0 / curveLength;
-						curve[i] = equation( elapsed ) * 2 - 1;
-					}
-
-					this.value = curve;
-
+					this.currentEquation = equation;
+					this.renderEquation();
 				},
 				get: function() {
-					return this.equation;
+					return this.currentEquation;
+				}
+			},
+			resolution: {
+				set: function(v) {
+					this.currentResolution = parseInt(v, 10);
+					this.renderEquation();
+				},
+				get: function() {
+					return this.currentResolution;
 				}
 			}
 		}
