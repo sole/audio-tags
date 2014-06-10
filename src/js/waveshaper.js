@@ -62,6 +62,7 @@ function register() {
 				this.valuesArray = [-1, 0, 1];
 				this.currentResolution = defaultResolution;
 				this.currentEquation = defaultEquation;
+				this.currentEquationName = null;
 				
 				// Read attributes set in HTML, if any
 				this.initAttributes(['resolution', 'equation']);
@@ -88,9 +89,6 @@ function register() {
 		},
 
 		accessors: {
-			// TODO function - from the tween list, and it will be rendered
-			// TODO function resolution, default 512? - only used with function
-
 			// Can be a comma separated list of values or an array
 			// Examples: this.value = '1,2,3' or this.value = '-0.5,1,0';
 			// also: this.value = [1,2,3,4]
@@ -125,7 +123,17 @@ function register() {
 						this.waveshaper.curve = curveF32;
 					}
 
-					canvasPlot.graph(this.canvas, curve);
+					var canvas = this.canvas;
+					var ctx = canvas.getContext('2d');
+					ctx.fillStyle = '#000';
+					ctx.fillRect(0, 0, canvas.width, canvas.height);
+					canvasPlot.graph(canvas, curve);
+
+					if(this.currentEquationName) {
+						ctx.fillStyle = '#fff';
+						ctx.fillText(this.currentEquationName, 0, 10);
+						ctx.fillText('Res = ' + this.currentResolution, 0, 20);
+					}
 
 				},
 
@@ -138,6 +146,7 @@ function register() {
 				set: function(v) {
 					var parts = v.split('.');
 					var equation = TWEEN.Easing[parts[0]][parts[1]];
+					this.currentEquationName = v;
 					this.currentEquation = equation;
 					this.renderEquation();
 				},
