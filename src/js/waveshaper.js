@@ -42,8 +42,12 @@ function register() {
 
 				this.appendChild(canvas);
 
+				var select = document.createElement('select');
+				this.appendChild(select);
+
 
 				// TODO provide option to change curve - like a drop down kinda thing? if values have been set with the accessor, curve is 'custom'
+
 
 			}
 		},
